@@ -1,0 +1,1957 @@
+<!--Ver1.1 Designed and developed by Subhashree N Srinivasagan and Igathinathane Cannayen
+Intiated Jan 20, 2020
+Worked through: Nov 10, 2020
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<link href="FECStyle.css" rel="stylesheet">
+
+<head>
+  <title>Forage Economics Calculator</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1 user-scalable=no" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <script src="https://kit.fontawesome.com/1b85132936.js" crossorigin="anonymous"></script>
+  <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+
+  <!-- Chart.js  -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.js"></script>
+
+  <!-- Program user-coded function -->
+  <script src="js/calculate.js"></script>
+  <!-- <script src="js/toggleSwitch.js"></script> -->
+  <script src="js/SwitchCond.js"></script>
+  <script src="js/minmax.js"></script>
+  <script src="js/checkABP.js"></script>
+  <script src="js/ChngValDropdown.js"></script>
+  <script src="js/marker.js"></script>
+  <script src="js/marker2.js"></script>
+  <script src="js/marker3.js"></script>
+  <script src="js/genPDF.js"></script>
+  <script src="js/chartDeets.js"></script>
+  <script src="js/genCharts.js"></script>
+  <script src="js/clearResults.js"></script>
+  <script src="js/Reset.js"></script>
+  <script src="js/marker2U.js"></script>
+  <script src="js/genCharts.js"></script>
+
+  <script>
+    //    Tooltip
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
+
+    // Chart.js functions 
+
+    function onClickCharts() {
+      // $('#ResBlock').remove();
+      document.getElementById('CalcSection').style.display = "none";
+      document.getElementById('ChartsSec').style.display = "block";
+
+    }
+
+    function goBackCalcSec() {
+      document.getElementById('ChartsSec').style.display = "none";
+      document.getElementById('CalcSection').style.display = "";
+    }
+    function discInfo() {
+      var myDiscText =
+        "DISCLAIMER\n\nNorth Dakota State University (NDSU) and United States Department of Agriculture- Agricultural Research Service (USDA-ARS) express or implied, including any warranty of fitness for a particular purpose, as to the accuracy or reliability of the data or information on this web site and assumes no responsibility for their use. \n      The web tool on this web site is provided on an ''as-is'' basis. Any user of these data, and/or any products produced directly or indirectly from these data, assumes the entire risk related to their use. \n      In no event will NDSU be liable to you or to any third party for any direct, indirect, consequential or exemplary damages or lost profit resulting from any use or misuse of these data. We reserve the right to modify the tool or information found on this web site as deemed necessary. If you believe some data are erroneous please notify us at once.";
+      alert(myDiscText);
+    }
+
+    function openSlide() {
+      document.getElementById("menu").style.width = '250px';
+      document.getElementById("content").style.marginLeft = '250px';
+    }
+    //      
+    function closeSlide() {
+      document.getElementById("menu").style.width = '0';
+      document.getElementById("content").style.marginLeft = '0';
+    }
+
+    function getData(idName) {
+      const val = document.getElementById(idName).value
+      return val;
+    }
+  </script>
+
+</head>
+
+<body style="overflow-x: hidden; max-width: 100%" class="big-banner">
+
+
+  <!-- Navigation -->
+
+  <section class="masthead" id="home">
+    <div id="content" style="border: none">
+      <span class="slide">
+        <a href="#" onclick="openSlide()"><i class="fas fa-bars" style="color: #FFC82E"></i></a>
+      </span>
+      <div id="menu" class="nav">
+        <div class="submenu">
+          <a href="#" class="close" onclick="closeSlide()"><i class="fas fa-times" style="color: #FFC82E"></i></a>
+          <li><a href="#home"> Home</a></li>
+          <li><a href="#manual"> Instructions & Manual</a></li>
+          <li><a href="#fcalc"> Calculator</a></li>
+          <li><a href="#contact"> Contact</a></li>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="container" style="text-align: center">
+      <div class="masthead-subheading">
+        <h2>Welcome!</h2>
+      </div>
+      <div class="masthead-heading text-uppercase" style="color: #FFC82E">Forage Economics Calculator</div>
+      <div class="masthead-heading" style="color: #FFC82E">
+        <h6 class="text-uppercase mb-4"><i class="fa fa-users" aria-hidden="true"></i> Webtool user count:
+          <i id="count" style="font-size: 18px; font-weight: bold;">
+          </i>
+        </h6>
+      </div>
+      <!-- <div class="masthead-heading" style="color: #FFC82E">
+        <h4 class="text-uppercase mb-4"><i class="fa fa-users" aria-hidden="true"></i> Webtool user:
+          <i id="count" style="font-size: 25px; font-weight: bold;">
+          </i></h4>
+      </div> -->
+      <script>
+        const countEl = document.getElementById('count');
+        updatePageCount();
+
+        function updatePageCount() {
+          fetch('https://api.countapi.xyz/update/forage/economics/?amount=1')
+            .then(res => res.json())
+            .then(res => {
+              countEl.innerHTML = res.value;
+            });
+        }
+      </script>
+
+      <div>
+        <img id="HayMount" class="responsive" src="Images/HayMount.jpg" alt="" style="height: 70vh; object-fit:none">
+      </div>
+      <a id="manbutton" class="btn text-uppercase" href="#manual"><i class="fas fa-angle-double-down"
+          style="font-size: 5vh; color: #FFC82E"></i></a>
+    </div>
+  </section>
+
+
+  <section class="manualsec" id="manual" style="background-image: url(Images/NDSU_temp.jpg)">
+    <!--<section class = "manualsec" id = "manual">-->
+    <!--
+            <div class="container">
+                <div class="masthead-subheading">Welcome</div>
+                <div class="masthead-heading text-uppercase">Forage Economics Calculator</div>
+                <a class="btn text-uppercase js-scroll-trigger" href="#fcalc"><i class="fas fa-angle-double-down" style="font-size: 5vh; color: #FFC82E"></i></a>
+            </div>
+-->
+    <div id="content">
+      <span class="slide">
+        <a href="#" onclick="openSlide()"><i class="fas fa-bars" style="color: #FFC82E"></i></a>
+      </span>
+      <!-- Navigation -->
+      <div id="menu" class="nav">
+        <div class="submenu">
+          <a href="#" class="close" onclick="closeSlide()"><i class="fas fa-times" style="color: #FFC82E"></i></a>
+          <li><a href="#home"> Home</a></li>
+          <li><a href="#manual"> Manual</a></li>
+          <li><a href="#fcalc"> Calculator</a></li>
+          <li><a href="#contact"> Contact</a></li>
+        </div>
+      </div>
+    </div>
+
+    <div id="container" class="container">
+      <div class="content-section-heading text-center">
+        <div class="col-md text-uppercase">
+          <h1 style="font-size: 3.2vh; color: #FFC82E">User instructions and manual</h1>
+        </div>
+        <!--     <div  class="masthead-heading text-uppercase" style="color: #FFC82E; line-height: 2rem">User instruction and manual</div>-->
+      </div>
+      <div class="row no-gutters">
+        <div class="col-lg-6" style="text-align: center">
+          <div class="row" style="width: 80%; display: inline-block"><i style="font-size: 2vh; color: #FFC82E">Contains
+              6-step operation instructions</i></div>
+          <a href="UserInstruction.pdf" target="_blank" style="height: 100vh">
+            <div class="container">
+              <img class="img-fluid" src="Images/UIns.jpg" alt="" style="height: 70vh; object-fit:scale-down">
+            </div>
+          </a>
+        </div>
+
+        <div class="col-lg-6" style="text-align: center">
+          <div class="row" style="width: 80%; display: inline-block"><i style="font-size: 2vh; color: #FFC82E">Contains
+              detailed description of inputs &amp; results</i></div>
+          <a href="ManualWeb.pdf" target="_blank" style="height: 100vh">
+            <div class="container">
+              <img class="img-fluid" src="Images/UsMan.jpg" alt="" style="height: 70vh; object-fit:scale-down">
+            </div>
+          </a>
+        </div>
+      </div>
+      <div style="text-align: center">
+        <a class="btn text-uppercase" href="#fcalc"><i class="fas fa-angle-double-down"
+            style="font-size: 5vh; color: #FFC82E"></i>
+        </a>
+      </div>
+
+    </div>
+
+
+    <!--<div id="container" class="container border" style="background-color:#FFC82E; color: #000">    -->
+  </section>
+
+  <section class="content-section" id="fcalc" style="background-image: url(Images/NDSU_temp.jpg)">
+
+    <div class="scrollbar scrollbar-primary">
+
+      <div id="content">
+        <span class="slide">
+          <a href="#" onclick="openSlide()"><i class="fas fa-bars" style="color: #FFC82E"></i></a>
+        </span>
+        <!-- Navigation -->
+
+        <div id="menu" class="nav">
+          <div class="submenu">
+            <a href="#" class="close" onclick="closeSlide()"><i class="fas fa-times" style="color: #FFC82E"></i></a>
+            <li><a href="#home"> Home</a></li>
+            <li><a href="#manual"> Manual</a></li>
+            <li><a href="#fcalc"> Calculator</a></li>
+            <li><a href="#contact"> Contact</a></li>
+          </div>
+        </div>
+      </div>
+
+      <div class="row text-center header" style="color:#FFC82E; padding-top: 3vh">
+        <div class="col-md-3"> <img src="Images/NDSUlogo.jpg" alt="ABEN" style="width: 18vw; margin-left: 70px;"></div>
+        <div class="col-md">
+          <h1 style="font-size: 3.2vh">FORAGE ECONOMICS CALCULATOR
+            <i class="fa fa-info-circle" style="color:#FFC82E; font-size: 18px;" data-toggle="tooltip" data-html="true"
+              data-placement="bottom"
+              title="<p style='text-align:left'>
+      This calculator assumes the forage bales were made and ready for aggregation and sale and calculates the detailed economics of forage/biomass collection using tractor or modern automatic bale picker (ABP). This means the (1) cost of production (seed, fertilizer, and chemicals) involved in the production, (2) cost involved in harvesting, and (3) baling were directly input into the calculator as the total amount ($/ac). These inputs were conveniently fed through, choice-boxs, sliders, and inputs boxes. Various useful outputs, in the form of text box results, dynamic graphical visualization bar chart, and color-coded information were generated that allow for 'what-if' scenario analysis by the users. The tooltips provide short description of the parameters, while the User-Manual contains detailed operating instructions and description for all the inputs and outputs items. Button were also available for 'Reset' (inputs to default), 'Help' (loads User-Manual), 'Clear results' (clears results), and 'Download report' (downloads a PDF copy of the whole report).</p>"></i>
+          </h1>
+        </div>
+        <div class="col-md-3">
+          <div class="float-right"><img src="Images/USDAlogo.jpg" alt="ABEN" style="width: 6vw; margin-right: 90px;">
+          </div>
+
+        </div>
+      </div>
+
+
+      <div id="container" class="container border" style="background-color:#FFC82E; color: #000;">
+        <div id="CalcSection" class="row border">
+          <div class="col-md-6 border" style="text-align: center">
+            <div class="row border">
+              <div id="Inp" class="col-md-6" style="margin-top: 0.5vh">
+                <a style="font-weight: bold; font-size: 16px">Inputs <i class="fa fa-info-circle"
+                    style="color:#0A5640; font-size: 12px; text-align: left" data-toggle="tooltip"
+                    data-placement="bottom"
+                    title="Basic inputs with appropriate units necessary for calculation are only considered. 
+                    The most common values were shown as defaults. Selection of the crop, engine power, tractor age owned, and annual usage can be performed through choice boxes. Slider position creates desired input. 
+                    User can also chage the limits by updating values on both input boxes around the sliders. 
+                    The sliders will use the updated limits and inputs value for processing. 'What-if' scenario analysis can be performed by modifying the various inputs."></i></a>
+              </div>
+              <div class="col-md-2 mt-1" style="font-size: small;">Imperial units</div>
+              <div class="col-md-2 mt-1">
+                <input type="checkbox" id="switch" class="checkbox" onchange="calculate(); toggleSwitch()" />
+                <label for="switch" class="toggle">
+              </div>
+              <div class="col-md-2 mt-1" style="font-size: small;">Metric units</div>
+            </div>
+            <div class="row border rowht">
+              <div id="Croptype" class="col-md" style="text-align: left; font-size: 14px">Crop type:</div>
+              <div id="dopt" class="col-md" style="text-align: left">
+                <p><select
+                    style="height: 25px; text-align: left; background-color:#FFDB58; color: black; font-size: 14px; border-radius: 4pt;"
+                    id="drop" name="cars" onchange="chng();chng(); calculate()">
+                    <option id="Alf" value="0">Alfalfa (Perennial, 5 years)</option>
+                    <option id="Alfm" value="1">Alfalfa mix (Perennial, 5 years)</option>
+                    <option id="Bar" value="2">Barley (Annual)</option>
+                    <option id="Crn" value="3">Corn (Annual)</option>
+                    <option id="Grnm" value="4">Grain mix (Annual)</option>
+                    <option id="GraP" value="11">Grass (Perennial)</option>
+                    <option id="Gra" value="5">Grass (Annual)</option>
+                    <option id="Gram" value="6">Grass mix (Annual)</option>
+                    <option id="Mill" value="7">Millet (Annual)</option>
+                    <option id="Oats" value="8">Oats (Annual)</option>
+                    <option id="Wht" value="9">Wheat (Annual)</option>
+                    <option id="Oth" value="10">(Others)</option>
+                  </select></p>
+              </div>
+
+              <div id="Enpw" class="col-md-3" style="text-align: left; font-size: 14px">Engine power: <br> (hp) </div>
+              <div class="col-md" style="text-align: left">
+                <p><select
+                    style="height: 25px; text-align: left; background-color:#FFDB58; color: black; font-size: 14px; border-radius: 4pt;"
+                    id="EHp" onchange="calculate()">
+                    <option id="ran2" value="1">80-149</option>
+                    <option id="ran1" value="0">30-79</option>
+                    <option id="ran3" value="2">150+</option>
+                  </select></p>
+              </div>
+            </div>
+
+            <div class="row border rowht">
+              <div class="col-md-4" style="text-align: left; font-size: 14px">Tractor age owned: <br> (years) </div>
+              <div class="col-md">
+                <p><select class="form-control"
+                    style="width: 80px; text-align: left; background-color:#FFDB58; color: black; font-size: 14px; border-radius: 4pt;"
+                    id="AgeYrs" onchange="calculate()">
+                    <option id="Y1">1</option>
+                    <option id="Y2">2</option>
+                    <option id="Y3">3</option>
+                    <option id="Y4">4</option>
+                    <option id="Y5">5</option>
+                    <option id="Y6">6</option>
+                    <option id="Y7">7</option>
+                    <option id="Y8">8</option>
+                    <option id="Y9">9</option>
+                    <option id="Y10">10</option>
+                    <option id="Y11">11</option>
+                    <option id="Y12">12</option>
+                    <option id="Y13">13</option>
+                    <option id="Y14">14</option>
+                    <option id="Y15">15</option>
+                    <option id="Y16">16</option>
+                    <option id="Y17">17</option>
+                    <option id="Y18">18</option>
+                    <option id="Y19">19</option>
+                    <option id="Y20">20</option>
+                  </select></p>
+              </div>
+              <div class="col-md-3" style="text-align: left; font-size: 14px; padding-left: 8pt;">Annual usage: <br> (h)
+              </div>
+              <div class="col-md">
+                <p><select class="form-control"
+                    style="height: 30px; text-align: left; background-color:#FFDB58; color: black; font-size: 14px; border-radius: 4pt; padding-left: -2pt;"
+                    id="AnnHrs" onchange="calculate()">
+                    <option id="H1" value="200">200</option>
+                    <option id="H2" value="400">400</option>
+                    <option id="H3" value="600">600</option>
+                  </select></p>
+              </div>
+            </div>
+
+
+            <div class="row border rowht" style="font-size: 14px">
+              <div id="Mc" class="col-md-4" style="text-align: left; font-size: 14px">Tractor cost: <i
+                  class="fas fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                  data-toggle="tooltip" data-placement="bottom"
+                  title="Cost of tractor with grappler and tractor with ABP trailer"></i> <br>($) </div>
+              <div class="col-md ">
+                <p style="color: #0A5640; font-weight: 600"><span id="nMp"></span></p>
+              </div>
+              <div class="col-md"> <input class="form-control number" id="minMp"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="50000" onchange="minmaxMp(); calculate(); marker('minMp', 'maxMp', 500)"></div>
+              <div class="col-md" id="sliderset">
+                <div class="row mt-2" style="text-align: center"><input class="slider" type="range" id="Mp" min=50000
+                    max="150000" value="50000" step=500 onchange="calculate(); marker('minMp', 'maxMp', 500)"></div>
+                <div class="row" style="text-align: left; text-indent: 0pt"> &#8593;</div>
+              </div>
+              <div class="col-md"> <input class="form-control number" id="maxMp"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="150000" onchange="minmaxMp(); calculate(); marker('minMp', 'maxMp', 500)"></div>
+              <script>
+                var rangesliderMp = document.getElementById("Mp");
+                var outputMp = document.getElementById("nMp");
+                outputMp.innerHTML = rangesliderMp.value;
+                rangesliderMp.oninput = function () {
+                  outputMp.innerHTML = this.value;
+                }
+              </script>
+            </div>
+
+            <div class="row border rowht" style="font-size: 14px">
+              <div id="ABPMc" class="col-md-4" style="text-align: left; font-size: 14px; color: grey;"><input
+                  type=checkbox id='ckb' onchange="calculate()"> &nbsp; Include ABP? ABP cost: <i id="ABPinfo"
+                  class="fas fa-info-circle" style="color:grey; font-size: 12px; text-align: left" data-toggle="tooltip"
+                  data-placement="bottom" title="Listed cost of automatic bale picker (ABP) during purchase"></i>($)
+              </div>
+
+              <div class="col-md ">
+                <p style="color: grey; font-weight: 600"><span id="nABP"></span></p>
+              </div>
+              <div class="col-md"> <input class="form-control number" id="minABP"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="10000" onchange="minmaxABP(); calculate(); marker('minABP', 'maxABP', 500)"></div>
+              <div class="col-md" id="sliderset">
+                <div class="row mt-2" style="text-align: center">
+                  <input class="slider" type="range" id="ABP" min=0 max="50000" value="0" step=500
+                    onchange="calculate(); marker('minABP', 'maxABP', 500)">
+                </div>
+                <div id="ABParrow" class="row" style="text-align: left; text-indent: 0pt; color: grey;"> &#8593;</div>
+              </div>
+              <div class="col-md"> <input class="form-control number" id="maxABP"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="50000" onchange="minmaxABP(); calculate(); marker('minABP', 'maxABP', 500)"></div>
+              <script>
+                var rangesliderABP = document.getElementById("ABP");
+                var outputABP = document.getElementById("nABP");
+                outputABP.innerHTML = rangesliderABP.value;
+                rangesliderABP.oninput = function () {
+                  outputABP.innerHTML = this.value;
+                }
+              </script>
+            </div>
+
+
+            <div class="row border rowht" style="font-size: 14px">
+              <div id="Irc" class="col-md-4" style="text-align: left; font-size: 14px">Interest rate: <i
+                  class="fas fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                  data-toggle="tooltip" data-placement="bottom" title="Loan interest rate (%)"></i> <br> (%) </div>
+              <div class="col-md ">
+                <p style="color: #0A5640; font-weight: 600"><span id="nIr"></span></p>
+              </div>
+              <div class="col-md"> <input class="form-control number" id="minIr"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="1" onchange="minmaxIr(); calculate(); marker2U('minIr', 'maxIr', 1, 'markIr', 'Ir')"></div>
+              <div class="col-md" id="sliderset">
+                <div class="row mt-2" style="text-align: center"><input class="slider" type="range" id="Ir" min="1"
+                    max="30" value="5" step=1 onchange="calculate(); marker2U('minIr', 'maxIr', 1, 'markIr', 'Ir')">
+                </div>
+                <div id="markIr" class="row" style="text-align: left; text-indent: 0pt"> &#8593;</div>
+              </div>
+              <div class="col-md"> <input class="form-control number" id="maxIr"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="30" onchange="minmaxIr(); calculate(); marker2U('minIr', 'maxIr', 1, 'markIr', 'Ir')"></div>
+              <script>
+                var rangesliderIr = document.getElementById("Ir");
+                var outputIr = document.getElementById("nIr");
+                outputIr.innerHTML = rangesliderIr.value;
+                rangesliderIr.oninput = function () {
+                  outputIr.innerHTML = this.value;
+                }
+              </script>
+            </div>
+
+
+            <div class="row border rowht" style="font-size: 14px">
+              <div class="col-md-4" style="text-align: left; font-size: 14px">Field area unit: <br>
+                <div id="FieldAreaUnit">(ac)</div>
+              </div>
+              <div class="col-md">
+                <p style="color: #0A5640; font-weight: 600"><span id="nAr"></span></p>
+              </div>
+              <div class="col-md "> <input class="form-control number" id="minAr"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="20" onchange="minmaxAr(); calculcate(); marker('minAr', 'maxAr', 1, 'markAr', 'Ar')"></div>
+              <div class="col-md" id="sliderset">
+                <div class="row mt-2"> <input class="slider" type="range" id="Ar" min=20 max="640" value="80" step=1
+                    onchange="calculate(); marker('minAr', 'maxAr', 10, 'markAr', 'Ar')"></div>
+                <div id="markAr" class="row" style="text-align: left; text-indent: 0pt"> &#8593;</div>
+              </div>
+              <div class="col-md "> <input class="form-control number" id="maxAr"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="640" onchange="minmaxAr(); calculcate(); marker('minAr', 'maxAr',1, 'markAr', 'Ar')"></div>
+              <script>
+                var rangesliderAr = document.getElementById("Ar");
+                var outputAr = document.getElementById("nAr");
+                outputAr.innerHTML = rangesliderAr.value;
+                rangesliderAr.oninput = function () {
+                  outputAr.innerHTML = this.value;
+                }
+              </script>
+            </div>
+
+            <div class="row border rowht">
+              <div class="col-md-4" style="text-align: left; font-size: 14px">Number of field units (#): </div>
+              <div class="col-md-2">
+                <p><input id="Un" type="number"
+                    style=" width: 40px; text-align: left; background-color:#FFDB58; color: black; font-size: 14px; border-radius: 5px"
+                    value="1" onchange="calculate()"></p>
+              </div>
+
+            </div>
+
+
+
+
+            <div class="row border rowht" style="font-size: 14px">
+              <div class="col-md-4" style="text-align: left; font-size: 14px">Forage yield: <br>
+                <div id="ForYldUni">(lb/ac)</div>
+              </div>
+              <div class="col-md">
+                <p style="color: #0A5640; font-weight: 600"><span id="nBy"></span></p>
+              </div>
+              <div class="col-md"> <input class="form-control number" id="minBy"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="2500" onchange="minmaxBy();calculate(); marker('minBy', 'maxBy', 100, 'markBY', 'By')"></div>
+              <div class="col-md" id="sliderset">
+                <div class="row mt-2"><input class="slider" type="range" id="By" min=500 max="50000" value="5000"
+                    step=100 onchange="calculate(); marker('minBy', 'maxBy', 100, 'markBY', 'By')"></div>
+                <div id="markBY" class="row" style="text-align: left; text-indent: 0pt"> &#8593;</div>
+              </div>
+              <div class="col-md "> <input class="form-control number" id="maxBy"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="50000" onchange="minmaxBy();calculate(); marker('minBy', 'maxBy', 100, 'markBY', 'By')">
+              </div>
+              <script>
+                var rangesliderBy = document.getElementById("By");
+                var outputBy = document.getElementById("nBy");
+                outputBy.innerHTML = rangesliderBy.value;
+                rangesliderBy.oninput = function () {
+                  outputBy.innerHTML = this.value;
+                }
+              </script>
+            </div>
+
+
+            <div class="row border rowht" style="font-size: 14px">
+              <div class="col-md-4" style="text-align: left; font-size: 14px">Bale mass: <i class="fa fa-info-circle"
+                  style="color:#0A5640; font-size: 12px; text-align: left" data-toggle="tooltip" data-placement="bottom"
+                  title="Bale mass in pounds (lb) for round bale"></i> <br>
+                <div id="BalMasUni">(lb)</div>
+              </div>
+              <div class="col-md">
+                <p style="color: #0A5640; font-weight: 600"><span id="nBm"></span></p>
+              </div>
+              <div class="col-md "> <input class="form-control number" id="minBm"
+                  style="height: 25px;padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="800" onchange="minmaxBm(); calculcate();  marker2U('minBm', 'maxBm', 10, 'markBm', 'Bm')">
+              </div>
+              <div class="col-md" id="sliderset">
+                <div class="row mt-2"><input class="slider" type="range" id="Bm" min=800 max="2000" value="1500" step=10
+                    onchange="calculate();  marker2U('minBm', 'maxBm', 10, 'markBm', 'Bm')"></div>
+                <div id="markBm" class="row" style="text-align: left; text-indent: 0pt"> &#8593;</div>
+              </div>
+              <div class="col-md "> <input class="form-control number" id="maxBm"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="2000" onchange="minmaxBm();calculcate();marker2U('minBm', 'maxBm', 10, 'markBm', 'Bm')">
+              </div>
+              <script>
+                var rangesliderBm = document.getElementById("Bm");
+                var outputBm = document.getElementById("nBm");
+                outputBm.innerHTML = rangesliderBm.value;
+                rangesliderBm.oninput = function () {
+                  outputBm.innerHTML = this.value;
+                }
+              </script>
+            </div>
+
+            <div class="row border rowht" style="font-size: 14px">
+              <div class="col-md-4" style="text-align: left; font-size: 14px">Bale sale price: <br> (BP, $/bale)</div>
+              <div class="col-md">
+                <p style="color: #0A5640; font-weight: 600"><span id="nBc"></span></p>
+              </div>
+              <div class="col-md"> <input class="form-control number" id="minBc"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="45" onchange="minmaxBc();calculcate(); marker('minBc', 'maxBc',5, 'markBc', 'Bc')"></div>
+              <div class="col-md" id="sliderset">
+                <div class="row mt-2"><input class="slider" type="range" id="Bc" min="45" max="110" value="75" step=5
+                    onchange="calculate(); marker('minBc', 'maxBc',5, 'markBc', 'Bc')"></div>
+                <div id="markBc" class="row" style="text-align: left; text-indent: 0pt"> &#8593;</div>
+              </div>
+              <div class="col-md"> <input class="form-control number" id="maxBc"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="110" onchange="minmaxBc();calculcate(); marker('minBc', 'maxBc',5, 'markBc', 'Bc')"></div>
+              <script>
+                var rangesliderBc = document.getElementById("Bc");
+                var outputBc = document.getElementById("nBc");
+                outputBc.innerHTML = rangesliderBc.value;
+                rangesliderBc.oninput = function () {
+                  outputBc.innerHTML = this.value;
+                }
+              </script>
+            </div>
+
+            <div class="row border rowht" style="font-size: 14px">
+              <div class="col-md-4" style="text-align: left; font-size: 14px">Bales/trip: <i class="fa fa-info-circle"
+                  style="color:#0A5640; font-size: 12px; text-align: left" data-toggle="tooltip" data-placement="bottom"
+                  title="1 and 2 bales/trip for tractor and 8-23 bales/trip for ABP"></i></div>
+              <div class="col-md">
+                <p style="color: #0A5640; font-weight: 600"><span id="nBt"></span></p>
+              </div>
+              <div class="col-md"> <input class="form-control number" id="minBt"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="1" onchange="minmaxBt(); calculcate(); marker('minBt', 'maxBt',1, 'markBt', 'Bt')"></div>
+              <div class="col-md" id="sliderset">
+                <div class="row mt-2"><input class="slider" type="range" id="Bt" min="1" max="23" value="2" step=1
+                    onchange="calculate(); marker('minBt', 'maxBt',1, 'markBt', 'Bt')"></div>
+                <div id="markBt" class="row" style="text-align: left; text-indent: 0pt"> &#8593;</div>
+              </div>
+              <div class="col-md "> <input class="form-control number" id="maxBt"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="23" onchange="minmaxBt(); calculcate(); marker('minBt', 'maxBt',1, 'markBt', 'Bt') "></div>
+              <script>
+                var rangesliderBt = document.getElementById("Bt");
+                var outputBt = document.getElementById("nBt");
+                outputBt.innerHTML = rangesliderBt.value;
+                rangesliderBt.oninput = function () {
+                  outputBt.innerHTML = this.value;
+                }
+              </script>
+            </div>
+
+            <div class="row border rowht" style="font-size: 14px">
+              <div class="col-md-4" style="text-align: left; font-size: 14px">Bale loading time <i
+                  class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                  data-toggle="tooltip" data-placement="bottom"
+                  title="Time required to pick up a bale and load it onto a truck for transport"></i>(BL, min/bale)
+              </div>
+              <div class="col-md">
+                <p style="color: #0A5640; font-weight: 600"><span id="nBLT"></span></p>
+              </div>
+              <div class="col-md"> <input class="form-control number" id="minBLT"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="0.5" onchange="minmaxBLT(); calculcate(); marker('minBLT', 'maxBLT',1, 'markBLT', 'BLT')">
+              </div>
+              <div class="col-md" id="sliderset">
+                <div class="row mt-2"><input class="slider" type="range" id="BLT" min="0.5" max="2" value="0.5"
+                    step=0.25 onchange="calculate(); marker('minBLT', 'maxBLT',1, 'markBLT', 'BLT')"></div>
+                <div id="markBt" class="row" style="text-align: left; text-indent: 0pt"> &#8593;</div>
+              </div>
+              <div class="col-md "> <input class="form-control number" id="maxBLT"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="2" onchange="minmaxBLT(); calculcate(); marker('minBLT', 'maxBLT',1, 'markBLT', 'BLT') ">
+              </div>
+              <script>
+                var rangesliderBLT = document.getElementById("BLT");
+                var outputBLT = document.getElementById("nBLT");
+                outputBLT.innerHTML = rangesliderBLT.value;
+                rangesliderBLT.oninput = function () {
+                  outputBLT.innerHTML = this.value;
+                }
+              </script>
+            </div>
+
+            <div class="row border rowht" style="font-size: 14px">
+              <div class="col-md-4" style="text-align: left; font-size: 14px">Bale unloading/stacking time <i
+                  class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                  data-toggle="tooltip" data-placement="bottom"
+                  title="Time required to unload a bale from the truck or ABP and place it as a stack"></i>(BU,
+                min/bale) </div>
+              <div class="col-md">
+                <p style="color: #0A5640; font-weight: 600"><span id="nBULT"></span></p>
+              </div>
+              <div class="col-md"> <input class="form-control number" id="minBULT"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="0.5" onchange="minmaxBULT(); calculcate(); marker('minBULT', 'maxBULT',1, 'markBULT', 'BULT')">
+              </div>
+              <div class="col-md" id="sliderset">
+                <div class="row mt-2"><input class="slider" type="range" id="BULT" min="0.5" max="4" value="0.5"
+                    step=0.25 onchange="calculate(); marker('minBULT', 'maxBULT',1, 'markBULT', 'BULT')"></div>
+                <div id="markBt" class="row" style="text-align: left; text-indent: 0pt"> &#8593;</div>
+              </div>
+              <div class="col-md "> <input class="form-control number" id="maxBULT"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="4" onchange="minmaxBULT(); calculcate(); marker('minBULT', 'maxBULT',1, 'markBULT', 'BULT') ">
+              </div>
+              <script>
+                var rangesliderBULT = document.getElementById("BULT");
+                var outputBULT = document.getElementById("nBULT");
+                outputBULT.innerHTML = rangesliderBULT.value;
+                rangesliderBULT.oninput = function () {
+                  outputBULT.innerHTML = this.value;
+                }
+              </script>
+            </div>
+
+
+            <div class="row border rowht" style="font-size: 14px">
+              <div id="GYtext" class="col-md-4" style="text-align: left; font-size: 14px; color: grey;">Grain yield <i
+                  id="GYInfo" class="fa fa-info-circle" style="color:grey; font-size: 12px; text-align: left"
+                  data-toggle="tooltip" data-placement="bottom" title="Grain yield from the specific field"></i>
+                <br>(GY, bushel/ac)
+              </div>
+              <div class="col-md">
+                <p style="color: grey;; font-weight: 600"><span id="nGY"></span></p>
+              </div>
+              <div class="col-md"> <input class="form-control number" id="minGY"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: grey; font-size: 14px"
+                  value="0.5" onchange="minmaxGY(); calculcate(); marker('minGY', 'maxGY',1, 'markGY', 'GY')">
+              </div>
+              <div class="col-md" id="sliderset">
+                <div class="row mt-2"><input class="slider" type="range" id="GY" min="0.5" max="4" value="0.5" step=0.25
+                    onchange="calculate(); marker('minGY', 'maxGY',1, 'markGY', 'GY')"></div>
+                <div id="markGY" class="row" style="text-align: left; text-indent: 0pt; color: grey;"> &#8593;</div>
+              </div>
+              <div class="col-md "> <input class="form-control number" id="maxGY"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: grey; font-size: 14px"
+                  value="4" onchange="minmaxGY(); calculcate(); marker('minGY', 'maxGY',1, 'markGY', 'GY') ">
+              </div>
+              <script>
+                var rangesliderGY = document.getElementById("GY");
+                var outputGY = document.getElementById("nGY");
+                outputGY.innerHTML = rangesliderGY.value;
+                rangesliderGY.oninput = function () {
+                  outputGY.innerHTML = this.value;
+                }
+              </script>
+            </div>
+
+
+
+            <div class="row border rowht" style="font-size: 14px">
+              <div id="GPtext" class="col-md-4" style="text-align: left; font-size: 14px; color: grey;">Grain price <i
+                  id="GPInfo" class="fa fa-info-circle" style="color:grey; font-size: 12px; text-align: left"
+                  data-toggle="tooltip" data-placement="bottom" title="Grain sale price specific to grain crops"></i>
+                <br>(GP, $/bushel)
+              </div>
+              <div class="col-md">
+                <p style="color: grey; font-weight: 600"><span id="nGP"></span></p>
+              </div>
+              <div class="col-md"> <input class="form-control number" id="minGP"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: grey; font-size: 14px"
+                  value="0.5" onchange="minmaxGP(); calculcate(); marker('minGP', 'maxGP',1, 'markGP', 'GP')">
+              </div>
+              <div class="col-md" id="sliderset">
+                <div class="row mt-2"><input class="slider" type="range" id="GP" min="0.5" max="4" value="0.5" step=0.25
+                    onchange="calculate(); marker('minGP', 'maxGP',1, 'markGP', 'GP')"></div>
+                <div id="markGP" class="row" style="text-align: left; text-indent: 0pt; color: grey;"> &#8593;</div>
+              </div>
+              <div class="col-md "> <input class="form-control number" id="maxGP"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: grey; font-size: 14px"
+                  value="4" onchange="minmaxGP(); calculcate(); marker('minGP', 'maxGP',1, 'markGP', 'GP') ">
+              </div>
+              <script>
+                var rangesliderGP = document.getElementById("GP");
+                var outputGP = document.getElementById("nGP");
+                outputGP.innerHTML = rangesliderGP.value;
+                rangesliderGP.oninput = function () {
+                  outputGP.innerHTML = this.value;
+                }
+              </script>
+            </div>
+
+            <div class="row border rowht" style="font-size: 14px">
+              <div class="col-md-4" style="text-align: left; font-size: 14px">Field rent: <i class="fa fa-info-circle"
+                  style="color:#0A5640; font-size: 12px; text-align: left" data-toggle="tooltip" data-placement="bottom"
+                  title="The cost of average rent of field area per acre"></i>
+                <div id="FldRntUni">(FAR, $/ac)</div>
+              </div>
+              <div class="col-md">
+                <p style="color: #0A5640; font-weight: 600"><span id="nFar"></span></p>
+              </div>
+              <div class="col-md "> <input class="form-control number" id="minFar"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="10" onchange="minmaxFar();calculcate(); marker2U('minFar', 'maxFar',0.5, 'markFar', 'Far')">
+              </div>
+              <div class="col-md" id="sliderset">
+                <div class="row mt-2"><input class="slider" type="range" id="Far" min="10" max="40" value="35" step=0.50
+                    onchange="calculate(); marker2U('minFar', 'maxFar',5, 'markFar', 'Far')"></div>
+                <div id="markFar" class="row" style="text-align: left; text-indent: 0pt"> &#8593;</div>
+              </div>
+              <div class="col-md"> <input class="form-control number" id="maxFar"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="40" onchange="minmaxFar();calculcate(); marker2U('minFar', 'maxFar',0.5, 'markFar', 'Far')">
+              </div>
+              <script>
+                var rangesliderFar = document.getElementById("Far");
+                var outputFar = document.getElementById("nFar");
+                outputFar.innerHTML = rangesliderFar.value;
+                rangesliderFar.oninput = function () {
+                  outputFar.innerHTML = this.value;
+                }
+              </script>
+            </div>
+
+            <div class="row border rowht" style="font-size: 14px">
+              <div class="col-md-4" style="text-align: left; font-size: 14px">Seed and seeding cost: <i
+                  class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                  data-toggle="tooltip" data-placement="bottom"
+                  title="Includes combined seed and seeding cost per acre. Seed cost/ac is annualized and depends on the crop type"></i>
+
+                <div id="SdCstUni">(SC, $/ac)</div>
+              </div>
+              <div class="col-md">
+                <p style="color: #0A5640; font-weight: 600"><span id="nSc"></span></p>
+              </div>
+              <div class="col-md "> <input class="form-control number" id="minSc"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="0.5" onchange="minmaxSc();calculcate(); marker2U('minSc', 'maxSc',5, 'markSc', 'Sc')"></div>
+              <div class="col-md" id="sliderset">
+                <div class="row mt-2"><input class="slider" type="range" id="Sc" min="0.5" max="100" value="25" step=0.5
+                    onchange="calculate(); marker2U('minSc', 'maxSc',5, 'markSc', 'Sc')"></div>
+                <div id="markSc" class="row" style="text-align: left; text-indent: 0pt"> &#8593;</div>
+              </div>
+              <div class="col-md"> <input class="form-control number" id="maxSc"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="100" onchange="minmaxSc();calculcate(); marker2U('minSc', 'maxSc',5, 'markSc', 'Sc')"></div>
+              <script>
+                var rangesliderSc = document.getElementById("Sc");
+                var outputSc = document.getElementById("nSc");
+                outputSc.innerHTML = rangesliderSc.value;
+                rangesliderSc.oninput = function () {
+                  outputSc.innerHTML = this.value;
+                }
+              </script>
+            </div>
+
+            <div class="row border rowht" style="font-size: 14px">
+              <div class="col-md-4" style="text-align: left; font-size: 14px">Fertilizer and application cost:<i
+                  class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                  data-toggle="tooltip" data-placement="bottom"
+                  title="Includes combined cost of fertilizers (nitrogen, uera, phosphorus, potassium, sulfur, etc.) and application per acre"></i>
+                (FRC, $/ac)
+                <!-- <div id="FertCstUni">(FRC, $/ac)</div> -->
+              </div>
+              <div class="col-md">
+                <p style="color: #0A5640; font-weight: 600"><span id="nFrc"></span></p>
+              </div>
+              <div class="col-md "> <input class="form-control number" id="minFrc"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="0.5" onchange="minmaxFrc();calculcate(); marker2U('minFrc', 'maxFrc',5, 'markFrc', 'Frc')">
+              </div>
+              <div class="col-md" id="sliderset">
+                <div class="row mt-2"><input class="slider" type="range" id="Frc" min="0.5" max="100" value="0" step=0.5
+                    onchange="calculate(); marker2U('minFrc', 'maxFrc',5, 'markFrc', 'Frc')"></div>
+                <div id="markFrc" class="row" style="text-align: left; text-indent: 0pt"> &#8593;</div>
+              </div>
+              <div class="col-md "> <input class="form-control number" id="maxFrc"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="100" onchange="minmaxFrc();calculcate(); marker2U('minFrc', 'maxFrc',5, 'markFrc', 'Frc')">
+              </div>
+              <script>
+                var rangesliderFrc = document.getElementById("Frc");
+                var outputFrc = document.getElementById("nFrc");
+                outputFrc.innerHTML = rangesliderFrc.value;
+                rangesliderFrc.oninput = function () {
+                  outputFrc.innerHTML = this.value;
+                }
+              </script>
+            </div>
+
+            <div class="row border rowht" style="font-size: 14px">
+              <div class="col-md-4" style="text-align: left; font-size: 14px">Chemical and application cost: <i
+                  class="fa fa-info-circle" style="color:#0A5640; text-align: left; font-size: 12px"
+                  data-toggle="tooltip" data-placement="bottom"
+                  title="Includes combined cost of herbicide, fungicide, and insecticide and application per acre"></i>
+                (CC, $/ac)
+                <!-- <div id="ChmCstUni">(CC, $/ac)</div> -->
+              </div>
+              <div class="col-md">
+                <p style="color: #0A5640; font-weight: 600"><span id="nCc"></span></p>
+              </div>
+              <div class="col-md"> <input class="form-control number" id="minCc"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="10" onchange="minmaxCc();calculcate(); marker2U('minCc', 'maxCc',5, 'markCc', 'Cc')"></div>
+              <div class="col-md" id="sliderset">
+                <div class="row mt-2"><input class="slider" type="range" id="Cc" min="0.5" max="150" value="10" step=0.5
+                    onchange="calculate(); marker2U('minCc', 'maxCc',5, 'markCc', 'Cc')"></div>
+                <div id="markCc" class="row" style="text-align: left; text-indent: 0pt"> &#8593;</div>
+              </div>
+              <div class="col-md"> <input class="form-control number" id="maxCc"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="150" onchange="minmaxCc();calculcate(); marker2U('minCc', 'maxCc',5, 'markCc', 'Cc')"></div>
+              <script>
+                var rangesliderCc = document.getElementById("Cc");
+                var outputCc = document.getElementById("nCc");
+                outputCc.innerHTML = rangesliderCc.value;
+                rangesliderCc.oninput = function () {
+                  outputCc.innerHTML = this.value;
+                }
+              </script>
+            </div>
+
+            <div class="row border rowht" style="font-size: 14px">
+              <div class="col-md-4" style="text-align: left; font-size: 14px">Harvest cost: <i class="fa fa-info-circle"
+                  style="color:#0A5640; text-align: left; font-size: 12px" data-toggle="tooltip" data-placement="bottom"
+                  title="Includes cost of equipment, fuel, and labor for harvesting operation"></i> <br>
+                <div id="HrvCstUni">(HC, $/ac)</div>
+              </div>
+              <div class="col-md">
+                <p style="color: #0A5640; font-weight: 600"><span id="nHc"></span></p>
+              </div>
+              <div class="col-md"> <input class="form-control number" id="minHc"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="20" onchange="minmaxHc();calculcate(); marker2U('minHc', 'maxHc',5, 'markHc', 'Hc')"></div>
+              <div class="col-md" id="sliderset">
+                <div class="row mt-2"><input class="slider" type="range" id="Hc" min="0.5" max="200" value="20" step=0.5
+                    onchange="calculate(); marker2U('minHc', 'maxHc',5, 'markHc', 'Hc')"></div>
+                <div id="markHc" class="row" style="text-align: left; text-indent: 0pt"> &#8593;</div>
+              </div>
+              <div class="col-md"> <input class="form-control number" id="maxHc"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="200" onchange="minmaxHc();calculcate(); marker2U('minHc', 'maxHc',5, 'markHc', 'Hc')"></div>
+              <script>
+                var rangesliderHc = document.getElementById("Hc");
+                var outputHc = document.getElementById("nHc");
+                outputHc.innerHTML = rangesliderHc.value;
+                rangesliderHc.oninput = function () {
+                  outputHc.innerHTML = this.value;
+                }
+              </script>
+            </div>
+
+
+            <div class="row border rowht" style="font-size: 14px">
+              <div class="col-md-4" style="text-align: left; font-size: 14px">Baling cost: <i class="fa fa-info-circle"
+                  style="color:#0A5640; text-align: left; font-size: 12px" data-toggle="tooltip" data-placement="bottom"
+                  title="Includes cost of equipment, fuel, labor for baling operation"></i> <br>
+                <div id="BlCstUni">(BC, $/ac)</div>
+              </div>
+              <div class="col-md">
+                <p style="color: #0A5640; font-weight: 600"><span id="nBl"></span></p>
+              </div>
+              <div class="col-md"> <input class="form-control number" id="minBl"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="15" onchange="minmaxBl(); calculcate();  marker2U('minBl', 'maxBl',1, 'markBl', 'Bl')"></div>
+              <div class="col-md" id="sliderset">
+                <div class="row mt-2"><input class="slider" type="range" id="Bl" min="0.5" max="150" value="15" step=1
+                    onchange="calculate();  marker2U('minBl', 'maxBl',1, 'markBl', 'Bl')"></div>
+                <div id="markBl" class="row" style="text-align: left; text-indent: 0pt"> &#8593;</div>
+              </div>
+              <div class="col-md"> <input class="form-control number" id="maxBl"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="150" onchange="minmaxBl();calculcate(); marker2U('minBl', 'maxBl',1, 'markBl', 'Bl') "></div>
+              <script>
+                var rangesliderBl = document.getElementById("Bl");
+                var outputBl = document.getElementById("nBl");
+                outputBl.innerHTML = rangesliderBl.value;
+                rangesliderBl.oninput = function () {
+                  outputBl.innerHTML = this.value;
+                }
+              </script>
+            </div>
+
+            <div class="row border rowht" style="font-size: 14px">
+              <div class="col-md-4" style="text-align: left; font-size: 14px">Fuel cost: <i class="fa fa-info-circle"
+                  style="color:#0A5640; font-size: 12px; text-align: left" data-toggle="tooltip" data-placement="bottom"
+                  title="Fuel cost for diesel fuel type"></i> <br>
+                <div id="FlCstUni">(FC, $/gal)</div>
+              </div>
+              <div class="col-md">
+                <p style="color: #0A5640; font-weight: 600"><span id="nFc"></span></p>
+              </div>
+              <div class="col-md"> <input class="form-control number" id="minFc"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="1" onchange="minmaxFc(); calculcate(); marker3('minFc', 'maxFc', 1, 'markFc', 'Fc')">
+              </div>
+              <div class="col-md" id="sliderset">
+                <div class="row mt-2"><input class="slider" type="range" id="Fc" min="0.5" max="10" value="2" step=0.01
+                    onchange="calculate(); marker3('minFc', 'maxFc', 1, 'markFc', 'Fc')">
+                </div>
+                <div id="markFc" class="row" style="text-align: left; text-indent: 0pt"> &#8593;</div>
+              </div>
+              <div class="col-md"> <input class="form-control number" id="maxFc"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="10" onchange="minmaxFc();calculcate(); marker3('minFc', 'maxFc', 1, 'markFc', 'Fc')">
+              </div>
+              <script>
+                var rangesliderFc = document.getElementById("Fc");
+                var outputFc = document.getElementById("nFc");
+                outputFc.innerHTML = rangesliderFc.value;
+                rangesliderFc.oninput = function () {
+                  outputFc.innerHTML = this.value;
+                }
+              </script>
+            </div>
+
+            <div class="row border rowht" style="font-size: 14px">
+              <div class="col-md-4" style="text-align: left; font-size: 14px">Tractor speed: <i
+                  class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                  data-toggle="tooltip" data-placement="bottom"
+                  title="Speed of the tractor with grappler and tractor with ABP trailer"></i> <br>
+                <div id="TrcSpdUni">(mph)</div>
+              </div>
+              <div class="col-md">
+                <p style="color: #0A5640; font-weight: 600"><span id="nSp"></span></p>
+              </div>
+              <div class="col-md"> <input class="form-control number" id="minSp"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="4" onchange="minmaxSp(); calculate(); marker('minSp', 'maxSp',0.25, 'markSp', 'Sp')"></div>
+              <div class="col-md" id="sliderset">
+                <div class="row mt-2"><input class="slider" type="range" id="Sp" min=4 max="8" value="5" step=0.25
+                    onchange="calculate(); marker('minSp', 'maxSp',0.25, 'markSp', 'Sp')"></div>
+                <div id="markSp" class="row" style="text-align: left; text-indent: 0pt"> &#8593;</div>
+              </div>
+              <div class="col-md"> <input class="form-control number" id="maxSp"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="8" onchange="minmaxSp(); calculate(); marker('minSp', 'maxSp',0.25, 'markSp', 'Sp')"></div>
+              <script>
+                var rangesliderSp = document.getElementById("Sp");
+                var outputSp = document.getElementById("nSp");
+                outputSp.innerHTML = rangesliderSp.value;
+                rangesliderSp.oninput = function () {
+                  outputSp.innerHTML = this.value;
+                }
+              </script>
+            </div>
+
+            <div class="row border rowht" style="font-size: 14px">
+              <div class="col-md-4" style="text-align: left; font-size: 14px"> People required: <i
+                  class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                  data-toggle="tooltip" data-placement="bottom"
+                  title="Number of people involved during bale collection"></i> <br>
+                (NL)
+              </div>
+              <div class="col-md">
+                <p style="color: #0A5640; font-weight: 600"><span id="nNL"></span></p>
+              </div>
+              <div class="col-md"> <input class="form-control number" id="minNL"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="1" onchange="minmaxNL(); calculcate(); marker3('minNL', 'maxNL',1, 'markNL', 'NL')">
+              </div>
+              <div class="col-md" id="sliderset">
+                <div class="row mt-2"><input class="slider" type="range" id="NL" min=1 max="10" value="1" step=1
+                    onchange="calculate(); marker3('minNL', 'maxNL',1, 'markNL', 'NL')"></div>
+                <div id="markNL" class="row" style="text-align: left; text-indent: 0pt"> &#8593;</div>
+              </div>
+              <div class="col-md"> <input class="form-control number" id="maxNL"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="10" onchange="minmaxNL(); calculcate(); marker3('minNL', 'maxNL',1, 'markNL', 'NL')">
+              </div>
+              <script>
+                var rangesliderNL = document.getElementById("NL");
+                var outputNL = document.getElementById("nNL");
+                outputNL.innerHTML = rangesliderNL.value;
+                rangesliderNL.oninput = function () {
+                  outputNL.innerHTML = this.value;
+                }
+              </script>
+            </div>
+
+
+            <div class="row border rowht" style="font-size: 14px">
+              <div class="col-md-4" style="text-align: left; font-size: 14px">Labor cost: <i class="fa fa-info-circle"
+                  style="color:#0A5640; font-size: 12px; text-align: left" data-toggle="tooltip" data-placement="bottom"
+                  title="Cost for labor operating the equipment per hour"></i> <br> (LC, $/h/labor)
+              </div>
+              <div class="col-md">
+                <p style="color: #0A5640; font-weight: 600"><span id="nLc"></span></p>
+              </div>
+              <div class="col-md"> <input class="form-control number" id="minLc"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="12" onchange="minmaxLc(); calculcate(); marker3('minLc', 'maxLc',0.50, 'markLc', 'Lc')">
+              </div>
+              <div class="col-md" id="sliderset">
+                <div class="row mt-2"><input class="slider" type="range" id="Lc" min=12 max="30" value="20" step=0.50
+                    onchange="calculate(); marker3('minLc', 'maxLc',0.50, 'markLc', 'Lc')"></div>
+                <div id="markLc" class="row" style="text-align: left; text-indent: 0pt"> &#8593;</div>
+              </div>
+              <div class="col-md"> <input class="form-control number" id="maxLc"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="30" onchange="minmaxLc(); calculcate(); marker3('minLc', 'maxLc',0.50, 'markLc', 'Lc')"></div>
+              <script>
+                var rangesliderLc = document.getElementById("Lc");
+                var outputLc = document.getElementById("nLc");
+                outputLc.innerHTML = rangesliderLc.value;
+                rangesliderLc.oninput = function () {
+                  outputLc.innerHTML = this.value;
+                }
+              </script>
+            </div>
+
+            <div class="row border rowht" style="font-size: 14px">
+              <div class="col-md-4" style="text-align: left; font-size: 14px">Bale transportation cost: <i
+                  class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                  data-toggle="tooltip" data-placement="bottom"
+                  title="Cost for transporting bale from field to storage factory"></i> <br>
+                <div id="BlTrnsCstUni">(BTC, $/mile)</div>
+              </div>
+              <div class="col-md">
+                <p style="color: #0A5640; font-weight: 600"><span id="nBTC"></span></p>
+              </div>
+              <div class="col-md"> <input class="form-control number" id="minBTC"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="1" onchange="minmaxBTC(); calculcate(); marker3('minBTC', 'maxBTC',0.50, 'markBTC', 'BTC')">
+              </div>
+              <div class="col-md" id="sliderset">
+                <div class="row mt-2"><input class="slider" type="range" id="BTC" min=1 max="10" value="3" step=0.50
+                    onchange="calculate(); marker3('minBTC', 'maxBTC',0.50, 'markBTC', 'BTC')"></div>
+                <div id="markBTC" class="row" style="text-align: left; text-indent: 0pt"> &#8593;</div>
+              </div>
+              <div class="col-md"> <input class="form-control number" id="maxBTC"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="10" onchange="minmaxBTC(); calculcate(); marker3('minBTC', 'maxBTC',0.50, 'markBTC', 'BTC')">
+              </div>
+              <script>
+                var rangesliderBTC = document.getElementById("BTC");
+                var outputBTC = document.getElementById("nBTC");
+                outputBTC.innerHTML = rangesliderBTC.value;
+                rangesliderBTC.oninput = function () {
+                  outputBTC.innerHTML = this.value;
+                }
+              </script>
+            </div>
+
+            <div class="row border rowht" style="font-size: 14px">
+              <div class="col-md-4" style="text-align: left; font-size: 14px">Bale transportation distance: <i
+                  class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                  data-toggle="tooltip" data-placement="bottom"
+                  title="Bale transporation distance in miles from field to storage"></i> <br>
+                <div id="BlTrsnDisUni">(BTD, mile)</div>
+              </div>
+              <div class="col-md">
+                <p style="color: #0A5640; font-weight: 600"><span id="nBTD"></span></p>
+              </div>
+              <div class="col-md"> <input class="form-control number" id="minBTD"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="1" onchange="minmaxBTD(); calculcate(); marker3('minBTD', 'maxBTD',1, 'markBTD', 'BTD')">
+              </div>
+              <div class="col-md" id="sliderset">
+                <div class="row mt-2"><input class="slider" type="range" id="BTD" min=1 max="50" value="5" step=1
+                    onchange="calculate(); marker3('minBTD', 'maxBTD',0.50, 'markBTD', 'BTD')"></div>
+                <div id="markBTD" class="row" style="text-align: left; text-indent: 0pt"> &#8593;</div>
+              </div>
+              <div class="col-md"> <input class="form-control number" id="maxBTD"
+                  style="height: 25px; padding: 0px; background-color:#FFDB58; text-align: center; color: black; font-size: 14px"
+                  value="50" onchange="minmaxBTD(); calculcate(); marker3('minBTD', 'maxBTD',1, 'markBTD', 'BTD')">
+              </div>
+              <script>
+                var rangesliderBTD = document.getElementById("BTD");
+                var outputBTD = document.getElementById("nBTD");
+                outputBTD.innerHTML = rangesliderBTD.value;
+                rangesliderBTD.oninput = function () {
+                  outputBTD.innerHTML = this.value;
+                }
+              </script>
+            </div>
+
+            <div class="row mt-4 mb-4" style="font-size: 14px">
+              <div class="col-md"><input type="button"
+                  style="border-radius: 10px; width: 100px; height: 30px; background-color: #005643; border: none; color: white; margin-top: 0px"
+                  value="Reset" onclick="Reset(); Reset(); this.blur()"></div>
+            </div>
+
+          </div>
+          <div class="clearfix"></div>
+          <div class="col-md-6" style="text-align: center">
+            <div class="row border">
+              <div class="col-md" style="margin-top: 0.5vh; margin-bottom: 0.9vh;">
+                <a style="font-weight: bold; font-size: 16px">Results <i class="fa fa-info-circle"
+                    style="color:#0A5640; font-size: 12px; text-align: left" data-toggle="tooltip"
+                    data-placement="bottom"
+                    title="This calculator automatically generates various result scenarios (what-if analysis) based on user inputs. Results include calculated values displayed in textboxes (with appropriate units), dynamic graphical visualization, and color-coded bottom line economics information."></i></a>
+              </div>
+            </div>
+            <div class="row border">
+
+              <div class="col-md-8">
+
+                <div class="row border">
+                  <div class="col-md-6 " style="text-align: left; font-size: 14px"> Equipment: <i
+                      class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                      data-toggle="tooltip" data-placement="bottom"
+                      title="Equipment type: tractor = 1 and 2 bales/trip and ABP = 8-23 bales/trip"></i></div>
+                  <div class="col-md-4">
+                    <p><input class="form-control number" id="Equip" size="8"
+                        style="padding: 5px; height: 25px; font-size: 13px; font-weight:100; border-radius: 3px; border: none; font-weight: 800; color: black; background-color: white"
+                        value="Tractor" readonly></p>
+                  </div>
+                </div>
+
+                <div class="row border">
+                  <div class="col-md-6 " style="text-align: left; font-size: 14px"> Total field area: <i
+                      class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                      data-toggle="tooltip" data-placement="bottom"
+                      title="Calculated based on the field area unit and number of field units"></i></div>
+                  <div class="col-md-3">
+                    <p><input class="form-control number" id="totFAr" size="8"
+                        style="padding: 5px; height: 25px; font-size: 13px; font-weight:100; border-radius: 3px; border: none; font-weight: 800; color: black; background-color: white"
+                        value="80" readonly></p>
+                  </div>
+                  <div class="col-md">
+                    <p id="ArResUni" style="text-align: left; font-size: 14px">(ac)</p>
+                  </div>
+                </div>
+
+                <div class="row border">
+                  <div class="col-md-6" style="text-align: left; font-size: 14px">Total number of bales: <i
+                      class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                      data-toggle="tooltip" data-placement="bottom"
+                      title="Calculated using the inputs, field area, forage yield, and bale mass"></i><br>(NB)</div>
+                  <div class="col-md-3"><input class="form-control number" id="NB" size="8"
+                      style="padding: 5px; height: 25px; font-size: 13px; font-weight:100; border-radius: 3px; border: none; font-weight: 800; color: black; background-color: white"
+                      value="316" readonly></div>
+                  <div class="col-md">
+                    <p style="text-align: left; font-size: 14px">(bales)</p>
+                  </div>
+                </div>
+
+                <div class="row border">
+                  <div id="TGYText" class="col-md-6" style="text-align: left; font-size: 14px">Total grain yield: <i
+                      id="TGYInfo" class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                      data-toggle="tooltip" data-placement="bottom"
+                      title="Calculated using the inputs, grain yield and field area unit"></i><br>(TGY)</div>
+                  <div class="col-md-3"><input class="form-control number" id="TGY" size="8"
+                      style="padding: 5px; height: 25px; font-size: 13px; font-weight:100; border-radius: 3px; border: none; font-weight: 800; color: black; background-color: white"
+                      value="316" readonly></div>
+                  <div class="col-md">
+                    <p id="TGYUnit" style="text-align: left; font-size: 14px">(bushel)</p>
+                  </div>
+                </div>
+
+                <div class="row border">
+                  <div class="col-md-6" style="text-align: left; font-size: 14px"> Bale collection logistics
+                    distance: <i class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                      data-toggle="tooltip" data-placement="bottom"
+                      title="Determined based on the developed model (refer help manual) which uses the inputs field area, bales/trip, and forage yield"></i>
+                  </div>
+                  <div class="col-md-3"><input class="form-control number" id="LD" size="8"
+                      style="padding: 5px; height: 25px; font-size: 13px; font-weight:100; border-radius: 3px; border: none; font-weight: 800; color: black; background-color: white"
+                      value="0.67" readonly></div>
+                  <div class="col-md">
+                    <p id="LogDisResUni" style="text-align: left; font-size: 14px">(mi)</p>
+                  </div>
+                </div>
+                <div class="row border">
+                  <div class="col-md-6" style="text-align: left; font-size: 14px"> Bale collection time: <i
+                      class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                      data-toggle="tooltip" data-placement="bottom"
+                      title="Estimated based on the obtained logistics distance and the speed of the equipment"></i>
+                    <br> (BCT)
+                  </div>
+                  <div class="col-md-3"><input class="form-control number" id="OT" size="8"
+                      style="padding: 5px; height: 25px; font-size: 13px; font-weight:100; border-radius: 3px; border: none; font-weight: 800; color: black; background-color: white"
+                      value="0.15" readonly></div>
+                  <div class="col-md">
+                    <p style="text-align: left; font-size: 14px">(h)</p>
+                  </div>
+                </div>
+
+                <div class="row border">
+                  <div class="col-md-6" style="text-align: left; font-size: 14px;"> Bale collection fuel
+                    consumption: <i class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                      data-toggle="tooltip" data-placement="bottom"
+                      title="Determined based on the developed model (refer help manual) using the inputs, field area, bales/trip, and forage yield"></i><br>
+                    (BCFC)
+                  </div>
+                  <div class="col-md-3"><input class="form-control number" id="FCP" size="8"
+                      style="padding: 5px; height: 25px; font-size: 13px; font-weight:100; border-radius: 3px; border: none; font-weight: 800; color: black; background-color: white"
+                      value="2.31" readonly></div>
+                  <div class="col-md">
+                    <p id="BlColFuUni" style="text-align: left; font-size: 14px">(gal)</p>
+                  </div>
+                </div>
+
+                <div class="row border">
+                  <div class="col-md-6" style="text-align: left; font-size: 14px"> Total bale operation time: <i
+                      class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                      data-toggle="tooltip" data-placement="bottom"
+                      title="Total operation time includes bale collection, loading, and unloading time"></i> <br>
+                    (TBOT)
+                    <!-- (TCT + (BL + BU) * NB = TOT) -->
+                  </div>
+                  <div class="col-md-3"><input class="form-control number" id="TBOT" size="8"
+                      style="padding: 5px; height: 25px; font-size: 13px; font-weight:100; border-radius: 3px; border: none; font-weight: 800; color: black; background-color: white"
+                      value="0.15" readonly></div>
+                  <div class="col-md">
+                    <p style="text-align: left; font-size: 14px">(h)</p>
+                  </div>
+                </div>
+
+                <div class="row border">
+                  <div class="col-md-6" style="text-align: left; font-size: 14px;"> Total bale fuel
+                    consumption: <i class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                      data-toggle="tooltip" data-placement="bottom"
+                      title="Total bale fuel consumption is estimated as the sum of fuel consumption for collection, loading, and unloading operations"></i><br>
+                    (TBFC)
+                  </div>
+                  <div class="col-md-3"><input class="form-control number" id="TBFC" size="8"
+                      style="padding: 5px; height: 25px; font-size: 13px; font-weight:100; border-radius: 3px; border: none; font-weight: 800; color: black; background-color: white"
+                      value="2.31" readonly></div>
+                  <div class="col-md">
+                    <p id="TotBlFuUni" style="text-align: left; font-size: 14px">(gal)</p>
+                  </div>
+                </div>
+
+
+                <div class="row border">
+                  <div class="col-md-6" style="text-align: left; font-size: 14px;"> Bale revenue: <i
+                      class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                      data-toggle="tooltip" data-placement="bottom"
+                      title=" Calculated based on the inputs bale sale price (BP) and total number of bales (NB)"></i><br>
+                    (BR) </div>
+                  <div class="col-md-3">
+                    <p><input class="form-control number" id="TBR" size="8"
+                        style="padding: 5px; height: 25px; font-size: 13px; font-weight:100; border-radius: 3px; border: none; font-weight: 800; color: #0000FF; background-color: white"
+                        value="$20,150" readonly></p>
+                  </div>
+                  <div class="col-md">
+                    <p style="text-align: left"></p>
+                  </div>
+                </div>
+
+                <div class="row border">
+                  <div id="TGRText" class="col-md-6" style="text-align: left; font-size: 14px;"> Grain revenue: <i
+                      id="TGRInfo" class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                      data-toggle="tooltip" data-placement="bottom"
+                      title=" Calculated based on the inputs grain price (GP) and total grain yield (TGY)"></i><br>
+                    (GR) </div>
+                  <div class="col-md-3">
+                    <p><input class="form-control number" id="TGR" size="8"
+                        style="padding: 5px; height: 25px; font-size: 13px; font-weight:100; border-radius: 3px; border: none; font-weight: 800; color: #0000FF; background-color: white"
+                        value="$20,150" readonly></p>
+                  </div>
+                  <div class="col-md">
+                    <p style="text-align: left"></p>
+                  </div>
+                </div>
+              </div>
+              <div id="myDiv" class="col-md border containerflex"
+                style="height: inherit; width: inherit; padding-bottom: 1ex;">
+                <div class="row hidden-xs"
+                  style="position: absolute; font-size: 1.3ex; padding-left: 2ex; display: flex; width: 100%;">
+                  <div style="font-size: 100%;">Crop: <input id="FrgePlot" value="Alfalfa" type="text"
+                      style="background-color: #FFC82E; border: none;">
+                  </div>
+                  <div style="font-size: 100%;">Crop type: <input id="TypePlot" value="Forage" type="text"
+                      style="background-color: #FFC82E; border: none;">
+                  </div>
+                  <div style="font-size: 100%;">Equipment type: <input id="EquipPlot" value="Tractor" type="text"
+                      style="background-color: #FFC82E; border: none;">
+                  </div>
+
+                  <i style="font-size: 90%;">(Hover over the graph to view values)</i>
+                  <i style="font-size: 90%;">FC
+                    = Fuel
+                    cost; TR
+                    =
+                    Total revenue </i>
+                  <i style="font-size: 90%;"> TC
+                    = Total
+                    cost; NR = Net return </i>
+                  <i style="font-size: 90%;">BE = Break even; PB = Payback</i>
+                  <i style="text-align: left; font-size: 90%;">Please click <b>"View Charts"</b> to download charts </i>
+                </div>
+                <svg width=100% height=87%>
+                  <g>
+                    <rect id="FCr" x="0" y="227" width="20" height="8" fill="#CC503E" data-toggle="tooltip"
+                      data-placement="bottom">
+                    </rect>
+                    <text id="FCt" x="0" y="15" font-family="Verdana" font-size="14" fill="#0A5640"> FC</text>
+                  </g>
+                  <script>
+                    $("#FCr").tooltip({
+                      title: function () {
+                        return "Fuel cost = " + getData("TotFuC");
+                      }
+                    });
+                  </script>
+
+                  <g>
+                    <rect id="TRr" x="33" y="25" width="20" height="210" fill="#94346E" data-toggle="tooltip"
+                      data-placement="bottom">
+                    </rect>
+                    <text id="TRt" x="33" y="15" font-family="Verdana" font-size="14" fill="#0A5640"> TR</text>
+                  </g>
+                  <script>
+                    $("#TRr").tooltip({
+                      title: function () {
+                        return "Total revenue = " + getData("TBR");
+                      }
+                    });
+                  </script>
+
+                  <g>
+                    <rect id="TCr" x="66" y="69" width="20" height="166" fill="#38A6A5" />
+                    <text id="TCt" x="66" y="15" font-family="Verdana" font-size="14" fill="#0A5640"> TC</text>
+                    <rect id="TPCr" x="66" y="69" width="20" height="83" fill="#ff7f00" />
+                    <rect id="TVCr" x="66" y="69" width="20" height="53" fill="#661100" />
+                    <text id="TVCt" x="66" y="80" font-family="Verdana" font-size="10" fill="#fff"> TVC</text>
+                    <text id="TFCt" x="66" y="132" font-family="Verdana" font-size="10" fill="#000"> TFC</text>
+                    <text id="TPCt" x="66" y="162" font-family="Verdana" font-size="10" fill="#000"> TPC</text>
+                  </g>
+                  <script>
+                    $("#TCr").tooltip({
+                      title: function () {
+                        return "Total cost = " + getData("TC");
+                      }
+                    });
+                  </script>
+                  <g>
+                    <rect id="NRr" x="99" y="191" width="20" height="44" fill="green" />
+                    <text id="NRt" x="99" y="15" font-family="Verdana" font-size="14" fill="#0A5640"> NR</text>
+                  </g>
+                  <script>
+                    $("#NRr").tooltip({
+                      title: function () {
+                        return "Net return = " + getData("NP");
+                      }
+                    });
+                  </script>
+
+                  <g>
+                    <rect id="BEr" x="132" y="222" width="20" height="13" fill="#5F4690" />
+                    <text id="BEt" x="132" y="15" font-family="Verdana" font-size="14" fill="#0A5640"> BE</text>
+                  </g>
+                  <script>
+                    $("#BEr").tooltip({
+                      title: function () {
+                        return "Break even ratio = " + getData("BE");
+                      }
+                    });
+                  </script>
+
+                  <g>
+                    <rect id="PBr" x="165" y="33" width="20" height="202" fill="#1D6996" />
+                    <text id="PBt" x="165" y="15" font-family="Verdana" font-size="14" fill="#0A5640"> PB</text>
+                  </g>
+                  <script>
+                    $("#PBr").tooltip({
+                      title: function () {
+                        return "Payback period = " + getData("PB");
+                      }
+                    });
+                  </script>
+                </svg>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4" style="text-align: left; font-size: 14px;"> Total revenue: <i
+                  class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                  data-toggle="tooltip" data-placement="bottom"
+                  title="Calculated as a sum of forage (bale, BR) and grain revenue (GR)"></i> <br>(TR)
+              </div>
+              <div class="col-md-2"><input class="form-control number" id="TotRev" size="8"
+                  style="padding: 5px; height: 25px; font-size: 13px; font-weight:100; border-radius: 3px; border: none; font-weight: 800; color: #0000FF; background-color: white"
+                  value="$10,000" readonly></div>
+              <div class="col-md-4" style="text-align: left; font-size: 14px;"> Total seed cost: <i
+                  class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                  data-toggle="tooltip" data-placement="bottom"
+                  title="Calculated based on the seed cost/ac (SC) and the selected field area (ac)"></i> <br>(TSC)
+              </div>
+              <div class="col-md-2"><input class="form-control number" id="TSC" size="8"
+                  style="padding: 5px; height: 25px; font-size: 13px; font-weight:100; border-radius: 3px; border: none; font-weight: 800; color: black; background-color: white"
+                  value="$30" readonly></div>
+            </div>
+
+            <div class="row ">
+              <div class="col-md-4" style="text-align: left; font-size: 14px;"> Total fertilizer cost: <i
+                  class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                  data-toggle="tooltip" data-placement="bottom"
+                  title="Calculated based on the fertlizer cost/ac (FRC) and the selected field area (ac)"></i>
+                <br>(TFRC)
+              </div>
+              <div class="col-md-2"><input class="form-control number" id="TFRC" size="8"
+                  style="padding: 5px; height: 25px; font-size: 13px; font-weight:100; border-radius: 3px; border: none; font-weight: 800; color: black; background-color: white; text-align: left;"
+                  value="$30" readonly></div>
+              <div class="col-md-4" style="text-align: left; font-size: 14px"> Total chemical cost: <i
+                  class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                  data-toggle="tooltip" data-placement="left"
+                  title="Calculated based on the chemical cost/ac (CC) and the selected field area (ac)"></i> <br>
+                (TCC) </div>
+              <div class="col-md-2">
+                <p><input class="form-control number" id="TCC" size="8"
+                    style="padding: 5px; height: 25px; font-size: 13px; font-weight:100; border-radius: 3px; border: none; font-weight: 800; color: black; background-color: white"
+                    value="$3000" readonly></p>
+              </div>
+              <!-- <div class="col-md-2" style="text-align: left; font-size: 14px">
+                <p></p>
+              </div> -->
+            </div>
+
+            <div class="row border">
+              <div class="col-md-4" style="text-align: left; font-size: 14px;"> Total harvest cost: <i
+                  class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                  data-toggle="tooltip" data-placement="bottom"
+                  title="Calculated based on the harvest cost/ac (HC) and the selected field area (ac)"></i>
+                <br>(THC)
+              </div>
+              <div class="col-md-2"><input class="form-control number" id="THC" size="8"
+                  style="padding: 5px; height: 25px; font-size: 13px; font-weight:100; border-radius: 3px; border: none; font-weight: 800; color: black; background-color: white"
+                  value="$8,400" readonly></div>
+              <div class="col-md-4" style="text-align: left; font-size: 14px;"> Total baling cost: <i
+                  class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                  data-toggle="tooltip" data-placement="bottom"
+                  title="Calculated based on the baling cost/ac (BC) and the selected field area (ac)"></i>
+                <br>(TBC)
+              </div>
+              <div class="col-md-2"><input class="form-control number" id="TBC" size="8"
+                  style="padding: 5px; height: 25px; font-size: 13px; font-weight:100; border-radius: 3px; border: none; font-weight: 800; color: black; background-color: white; text-align: left;"
+                  value="$7,860" readonly></div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4" style="text-align: left; font-size: 14px;"> Total fuel cost: <i
+                  class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                  data-toggle="tooltip" data-placement="bottom"
+                  title="Calculated based on the net return (NR) and the selected field area (ac)"></i> <br>(TFuC)
+              </div>
+              <div class="col-md-2"><input class="form-control number" id="TotFuC" size="8"
+                  style="padding: 5px; height: 25px; font-size: 13px; font-weight:100; border-radius: 3px; border: none; font-weight: 800; color: black; background-color: white"
+                  value="$4.6" readonly></div>
+              <div class="col-md-4" style="text-align: left; font-size: 14px;"> Total labor cost: <i
+                  class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                  data-toggle="tooltip" data-placement="bottom"
+                  title="Calculated based on the number of labors (NL), labor cost (LC), and total operation time"></i>
+                <br>(TLC)
+              </div>
+              <div class="col-md-2"><input class="form-control number" id="TLC" size="8"
+                  style="padding: 5px; height: 25px; font-size: 13px; font-weight:100; border-radius: 3px; border: none; font-weight: 800; color: black; background-color: white; text-align: left;"
+                  value="$2.2" readonly></div>
+            </div>
+
+            <div class="row ">
+              <div class="col-md-4" style="text-align: left; font-size: 14px;"> Total bale transportation cost: <i
+                  class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                  data-toggle="tooltip" data-placement="bottom"
+                  title=" Calculated based on the bale transportation cost (BTC) and distance (BTD)"></i><br>
+                (TBTC) </div>
+              <div class="col-md-2">
+                <p><input class="form-control number" id="TBTC" size="8"
+                    style="padding: 5px; height: 25px; font-size: 13px; font-weight:100; border-radius: 3px; border: none; font-weight: 800; color: black; background-color: white"
+                    value="$50" readonly></p>
+              </div>
+              <div class="col-md-2">
+                <p style="text-align: left"></p>
+              </div>
+            </div>
+
+            <div class="row border">
+              <div class="col-md-4" style="text-align: left; font-size: 14px"> Crop input cost: <i
+                  class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                  data-toggle="tooltip" data-placement="bottom"
+                  title="Crop input cost (CIC) is the total sum of the inputs, seed cost (SC), fertilizer cost (FRC) and chemical cost (CC) for the field area (ac)"></i>
+                <br> (SC + FRC + CC = CIC)
+              </div>
+              <div class="col-md"><input class="form-control number" id="SC"
+                  style="height: 25px; padding: 5px; background-color:white; text-align: center; color: black; font-size: 12px"
+                  value="$4130.0"></div>
+              <div class="col-md-0.25"> + </div>
+              <div class="col-md"> <input class="form-control number" id="FRC"
+                  style="height: 25px; padding: 5px; background-color:white; text-align: center; color: black; font-size: 12px"
+                  value="$4425.0"></div>
+              <div class="col-md-0.25"> + </div>
+              <div class="col-md"> <input class="form-control number" id="CC"
+                  style="height: 25px; padding: 5px; background-color:white; text-align: center; color: black; font-size: 12px"
+                  value="$2950.0"></div>
+              <div class="col-md-0.25"> = </div>
+              <div class="col-md"> <input class="form-control number" id="CIC"
+                  style="height: 25px; padding: 5px; background-color:white; text-align: center; color: black; font-size: 13px; font-weight: 800"
+                  value="$11,505"></div>
+            </div>
+
+            <div class="row border">
+              <div class="col-md-4" style="text-align: left; font-size: 14px"> Total production cost: <i
+                  class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                  data-toggle="tooltip" data-placement="bottom"
+                  title="Total production cost (TPC) is the total sum of crop input cost (CIC), harvest cost (HC), and baling cost (BC) for the field area input value in acre (ac)"></i>
+                <br> (CIC + HC + BC = TPC)
+              </div>
+
+              <div class="col-md"> <input class="form-control number" id="CICa"
+                  style="height: 25px; padding: 5px; background-color:white; text-align: center; color: black; font-size: 12px"
+                  value="$11505.0"></div>
+              <div class="col-md-0.25"> + </div>
+              <div class="col-md"><input class="form-control number" id="HC"
+                  style="height: 25px; padding: 5px; background-color:white; text-align: center; color: black; font-size: 12px"
+                  value="$2360.0"></div>
+              <div class="col-md-0.25"> + </div>
+              <div class="col-md"> <input class="form-control number" id="BL"
+                  style="height: 25px; padding: 5px; background-color:white; text-align: center; color: black; font-size: 12px"
+                  value="$2065.0"></div>
+              <div class="col-md-0.25"> = </div>
+              <div class="col-md"> <input class="form-control number" id="TPC"
+                  style="height: 25px; padding: 5px; background-color:white; text-align: center; color: black; font-size: 13px; font-weight: 800"
+                  value="$15,930"></div>
+            </div>
+
+            <div class="row border">
+              <div class="col-md-4" style="text-align: left; font-size: 14px"> Total fixed cost: <i
+                  class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                  data-toggle="tooltip" data-placement="bottom"
+                  title="Total fixed cost (TFC) is the total sum of the calculated depriciation (D), taxing, housing, and insurance (THI), and interest (I) cost for the total operation time of the equipment (refer help manual for the formulae)"></i>
+                <br> (D + THI&#38;I + FAR = TFC)
+              </div>
+              <div class="col-md"><input class="form-control number" id="Dep"
+                  style="height: 25px; padding: 5px; background-color:white; text-align: center; color: black; font-size: 12px"
+                  value="$5.0"></div>
+              <div class="col-md-0.25"> + </div>
+              <div class="col-md"> <input class="form-control number" id="THI_I"
+                  style="height: 25px; padding: 5px; background-color:white; text-align: center; color: black; font-size: 12px"
+                  value="$8.0"></div>
+              <div class="col-md-0.25"> + </div>
+              <div class="col-md"> <input class="form-control number" id="LRC"
+                  style="height: 25px; padding: 5px; background-color:white; text-align: center; color: black; font-size: 12px"
+                  value="$30.2"></div>
+              <div class="col-md-0.25"> = </div>
+              <div class="col-md"> <input class="form-control number" id="TFC"
+                  style="height: 25px; padding: 5px; background-color:white; text-align: center; color: black; font-size: 13px; font-weight: 800"
+                  value="$43"></div>
+
+            </div>
+
+            <div class="row border">
+              <div class="col-md-4" style="text-align: left; font-size: 14px"> Total variable cost: <i
+                  class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                  data-toggle="tooltip" data-placement="bottom"
+                  title="Total variable cost (TVC) is the total sum of calculated repair and maintenence cost (RMC, refer help manual for formula) and the inputs fuel (FC) and labor (LC) cost for the total operation time of the equipment"></i>
+                <br> (RMC + FC&LC + TBTC = TVC)
+              </div>
+              <div class="col-md"><input class="form-control number" id="RMC"
+                  style="height: 25px; padding: 5px; background-color:white; text-align: center; color: black; font-size: 12px"
+                  value="$0.1"></div>
+              <div class="col-md-0.25"> + </div>
+              <div class="col-md"> <input class="form-control number" id="FCLC"
+                  style="height: 25px; padding: 5px; background-color:white; text-align: center; color: black; font-size: 12px"
+                  value="$3.4"></div>
+              <div class="col-md-0.25"> + </div>
+              <div class="col-md"> <input class="form-control number" id="TBTCv"
+                  style="height: 25px; padding: 5px; background-color:white; text-align: center; color: black; font-size: 12px"
+                  value="$50"></div>
+              <div class="col-md-0.25"> = </div>
+              <div class="col-md"> <input class="form-control number" id="TVC"
+                  style="height: 25px; padding: 5px; background-color:white; text-align: center; color: black; font-size: 13px; font-weight: 800"
+                  value="$53"></div>
+
+            </div>
+
+
+            <div class="row border">
+              <div class="col-md-4" style="text-align: left; font-size: 14px;"> Total cost: <i class="fa fa-info-circle"
+                  style="color:#0A5640; font-size: 12px; text-align: left" data-toggle="tooltip" data-placement="bottom"
+                  title="Total cost is the total sum of total production cost (TPC), total fixed cost (TFC), and total variable cost (TVC)"></i>
+                <br>(TPC + TFC + TVC = TC)
+              </div>
+              <div class="col-md"> <input class="form-control number" id="TotPC"
+                  style="height: 25px; padding: 5px; background-color:white; text-align: center; color: black; font-size: 12px"
+                  value="$15930"></div>
+              <div class="col-md-0.25"> + </div>
+              <div class="col-md"><input class="form-control number" id="TotFC"
+                  style="height: 25px; padding: 5px; background-color:white; text-align: center; color: black; font-size: 12px"
+                  value="$43"></div>
+              <div class="col-md-0.25"> + </div>
+              <div class="col-md"> <input class="form-control number" id="TotVC"
+                  style="height: 25px; padding: 5px; background-color:white; text-align: center; color: black; font-size: 12px"
+                  value="$25"></div>
+              <div class="col-md-0.25"> = </div>
+              <div class="col-md"> <input class="form-control number" id="TC"
+                  style="height: 25px; padding: 5px; background-color:white; text-align: center; color: #0000FF; font-size: 13px; font-weight: 800"
+                  value="$15,998"></div>
+            </div>
+
+            <div class="row border">
+              <div class="col-md-4" style="text-align: left; font-size: 14px"> Total revenue per acre: <i
+                  class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                  data-toggle="tooltip" data-placement="bottom"
+                  title="Calculated based on the total bale revenue (BR) and the selected field area (ac)"></i> <br>
+                (TR/ac) </div>
+              <div class="col-md-2">
+                <p><input class="form-control number" id="TRAC" size="8"
+                    style="padding: 5px; height: 25px; font-size: 13px; font-weight:100; border-radius: 3px; border: none; font-weight: 800; color: black; background-color:gainsboro"
+                    value="$342" readonly></p>
+              </div>
+              <div class="col-md-4" style="text-align: left; font-size: 14px;"> Total cost per acre: <i
+                  class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                  data-toggle="tooltip" data-placement="bottom"
+                  title="Calculated based on the total cost (TC) and the selected field area (ac)"></i> <br> (TC/ac)
+              </div>
+              <div class="col-md-2">
+                <p><input class="form-control number" id="TCAC" size="8"
+                    style="padding: 5px; height: 25px; font-size: 13px; font-weight:100; border-radius: 3px; border: none; font-weight: 800; color: black; background-color: gainsboro"
+                    value="$271" readonly></p>
+              </div>
+            </div>
+
+            <div class="row border paddingsec">
+              <div id="NRdiv" class="col-md-4" style="text-align: left; font-size: 14px;"> Net return (NR): <i
+                  class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                  data-toggle="tooltip" data-placement="bottom"
+                  title="Net return is the difference of total revenue (TR) and total cost (TC)"></i> <br>(NR = TR
+                - TC) </div>
+              <div class="col-md-2"><input class="form-control number" id="NP" size="8"
+                  style="padding: 5px; height: 25px; font-size: 13px; font-weight:100; border-radius: 3px; border: none; font-weight: 800; color: black; background-color: white; text-align: left; background-color: #98FB98"
+                  value="$4,152" readonly></div>
+              <div id="NRdivac" class="col-md-4" style="text-align: left; font-size: 14px;"> Net return per acre: <i
+                  class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                  data-toggle="tooltip" data-placement="bottom"
+                  title="Calculated based on the net return (NR) and the selected field area (ac)"></i> <br>(NR/ac)
+              </div>
+              <div class="col-md-2"><input class="form-control number" id="NPAC" size="8"
+                  style="padding: 5px; height: 25px; font-size: 13px; font-weight:100; border-radius: 3px; border: none; font-weight: 800; color: black; text-align: left; background-color:gainsboro"
+                  value="$70" readonly></div>
+            </div>
+
+            <div class="row paddingsec">
+
+              <div class="col-md-4" style="text-align: left; font-size: 14px;"> Break even ratio: <i
+                  class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                  data-toggle="tooltip" data-placement="bottom"
+                  title="Break even ratio is the ratio of total bale revenue (TR) to total cost (TC). Ratio value > 1 indicates profit and < 1 indicates loss"></i>
+                <br> (BE)
+              </div>
+              <div class="col-md-2">
+                <p><input class="form-control number" id="BE" size="8"
+                    style="padding: 5px; height: 25px; font-size: 13px; font-weight:100; border-radius: 3px; border: none; font-weight: 800; color: black; background-color: white"
+                    value="1.2" readonly></p>
+              </div>
+            </div>
+
+            <div class="row border-top paddingsec">
+              <div id="EquipLabel" class="col-md-3" style="text-align: left; font-size: 14px; color: grey;"> Equipment:
+                <i id="ABPRes" class="fa fa-info-circle" style="color:grey; font-size: 12px; text-align: left"
+                  data-toggle="tooltip" data-placement="bottom"
+                  title="Break even ratio is the ratio of total bale revenue (TR) to total cost (TC). Ratio value > 1 indicates profit and < 1 indicates loss"></i>
+              </div>
+              <div class="col-md-3">
+                <p><input class="form-control number" id="EqTyp_ABP" size="8"
+                    style="padding: 5px; height: 25px; font-size: 13px; font-weight:100; border-radius: 3px; border: none; font-weight: 800; color: grey; background-color:#FFC72A"
+                    value="ABP" readonly></p>
+              </div>
+            </div>
+
+            <div class="row paddingsec">
+              <div id="PBLabel" class="col-md-3" style="text-align: left; font-size: 14px; color: grey;"> Payback
+                period: <i id="PB_info" class="fa fa-info-circle" style="color:grey; font-size: 12px; text-align: left"
+                  data-toggle="tooltip" data-placement="bottom"
+                  title="Pay back period is estimated (in cycles) using net return (NR, only if profit) and tractor price "></i>
+                <br> (PB, cycles)
+              </div>
+              <div class="col-md-2">
+                <p><input class="form-control number" id="PB_ABP" size="8"
+                    style="padding: 5px; height: 25px; width: 40px; font-size: 13px; font-weight:100; border-radius: 3px; border: none; font-weight: 800; color: grey; background-color: #FFC82E"
+                    value="---" readonly></p>
+              </div>
+              <div id="ROILabel" class="col-md-4" style="text-align: left; font-size: 14px; color: grey;"> Return on
+                investment: <i id="ROI_info" class="fa fa-info-circle"
+                  style="color:grey; font-size: 12px; text-align: left;" data-toggle="tooltip" data-placement="left"
+                  title="Return on investment is calculated as a % of net return (NR) to the tractor price"></i> <br>
+                (ROI, %) </div>
+              <div class="col-md-2">
+                <p><input class="form-control number" id="ROI_ABP" size="8"
+                    style="padding: 5px; height: 25px; font-size: 13px; font-weight:100; border-radius: 3px; border: none; font-weight: 800; color: grey; background-color: #FFC82E"
+                    value="---" readonly></p>
+              </div>
+            </div>
+
+            <div class="row border-top paddingsec">
+              <div class="col-md-3" style="text-align: left; font-size: 14px;"> Equipment: <i class="fa fa-info-circle"
+                  style="color:#0A5640; font-size: 12px; text-align: left" data-toggle="tooltip" data-placement="bottom"
+                  title="Break even ratio is the ratio of total bale revenue (TR) to total cost (TC). Ratio value > 1 indicates profit and < 1 indicates loss"></i>
+              </div>
+              <div class="col-md-3">
+                <p><input class="form-control number" id="EqTyp" size="8"
+                    style="padding: 5px; height: 25px; font-size: 13px; font-weight:100; border-radius: 3px; border: none; font-weight: 800; color: black; background-color:#FFC82E"
+                    value="Tractor" readonly></p>
+              </div>
+            </div>
+
+            <div class="row paddingsec">
+              <div class="col-md-3" style="text-align: left; font-size: 14px;"> Payback period: <i
+                  class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                  data-toggle="tooltip" data-placement="bottom"
+                  title="Pay back period is estimated (in cycles) using net return (NR, only if profit) and tractor price "></i>
+                <br> (PB, cycles)
+              </div>
+              <div class="col-md-2">
+                <p><input class="form-control number" id="PB" size="8"
+                    style="padding: 5px; height: 25px; width: 40px; font-size: 13px; font-weight:100; border-radius: 3px; border: none; font-weight: 800; color: black; background-color: white"
+                    value="24" readonly></p>
+              </div>
+              <div class="col-md-4" style="text-align: left; font-size: 14px"> Return on investment: <i
+                  class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left;"
+                  data-toggle="tooltip" data-placement="left"
+                  title="Return on investment is calculated as a % of net return (NR) to the tractor price"></i> <br>
+                (ROI, %) </div>
+              <div class="col-md-2">
+                <p><input class="form-control number" id="ROI" size="8"
+                    style="padding: 5px; height: 25px; font-size: 13px; font-weight:100; border-radius: 3px; border: none; font-weight: 800; color: black; background-color: white"
+                    value="4" readonly></p>
+              </div>
+
+            </div>
+
+
+            <div class="row border" style="padding-bottom: 2%;">
+              <div class="col-md-3" style="text-align: left; font-size: 14px"> "Harvest and collection":
+                <i class="fa fa-info-circle" style="color:#0A5640; font-size: 12px; text-align: left"
+                  data-toggle="tooltip" data-placement="left"
+                  title="Harvest and collection scenario: cost associated with harvesting (HC), baling (BC), collection (TFuC & TLC), and transportation (TBTC)"></i>
+              </div>
+              <div class="col-md-1" style="text-align: left; font-size: 14px">
+                Cost:
+              </div>
+              <div class="col-md-1" style="text-align: left; font-size: 14px; padding: 0;">
+                <input class="form-control number" id="HCC" size="8"
+                  style="padding: 5px; height: 25px; font-size: 13px; font-weight:100; border-radius: 3px; border: none; font-weight: 800; color: black; background-color: white"
+                  value="15,912" readonly>
+              </div>
+              <div class="col-md-2" style="text-align: left; font-size: 14px">
+                % of Total cost:
+              </div>
+              <div class="col-md-1" style="text-align: left; font-size: 14px; padding-right: 10px;">
+                <input class="form-control number" id="HCCPc" size="8"
+                  style="padding: 5px; height: 25px; font-size: 13px; font-weight:100; border-radius: 3px; border: none; font-weight: 800; color: black; background-color: white"
+                  value="16" readonly>
+              </div>
+              <div class="col-md-2" style="text-align: left; font-size: 14px">
+                Cost/acre:
+              </div>
+              <div class="col-md-1" style="text-align: left; font-size: 14px; padding: 0;">
+                <input class="form-control number" id="HCCPAc" size="8"
+                  style="padding: 5px; height: 25px; font-size: 13px; font-weight:100; border-radius: 3px; border: none; font-weight: 800; color: black; background-color: white"
+                  value="6" readonly>
+              </div>
+            </div>
+
+
+            <div class="row" style="font-size: 14px; margin-top: 20pt;">
+              <div class="col-md"><input type="button"
+                  style="border-radius: 10px; width: 110px; height: 30px; background-color: #005643; border: none; color: white"
+                  value=" Clear results " onclick="clearResults(); this.blur()"></div>
+              <div class="col-md"><input type="button"
+                  style="border-radius: 10px; width: 140px; height: 30px; background-color: #005643; border: none; color: white"
+                  value=" Download report " onclick="genPDF(); this.blur()"></div>
+
+              <div class="col-md"><input type="button"
+                  style="border-radius: 10px; width: 150px; height: 30px; background-color: #005643; border: none; color: white"
+                  value=" View chart" onclick="onClickCharts(); chartDeets1(); this.blur()"></div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div id="ChartsSec" style="display: none; margin: 80pt;">
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md border" style="background-color: white; padding-bottom: 0px;"><canvas height="400vh"
+          width="540vw" id="myChart1"></canvas>
+      </div>
+      <div class="col-md" style="background-color: white; padding-top: 0px; font-family: Times;">
+        <div class="row" style="font-size: 12px; color: black;">
+          <div class="col-md-8" style="padding-left: 0px;">Crop: </div>
+          <div class="col-md-4" style="padding-left: 0px;"><input style="border:hidden; width: 50px;" id="Cropchd"
+              type="text"></div>
+        </div>
+        <div class="row" style="font-size: 12px; color: black;">
+          <div class="col-md-8" style="padding-left: 0px;">Crop type: </div>
+          <div class="col-md-4" style="padding-left: 0px;"><input style="border:hidden; width: 50px;" id="Croptypchd"
+              type="text"></div>
+        </div>
+        <div class="row" style="font-size: 12px; color: black;">
+          <div class="col-md-8" style="padding-left: 0px;">Equipment type: </div>
+          <div class="col-md-4" style="padding-left: 0px;"><input style="border:hidden; width: 50px;" id="Equiptypchd"
+              type="text"></div>
+        </div>
+        <div class="row" style="font-size: 12px; color: black;">
+          <div class="col-md-8" style="padding-left: 0px;">Total revenue/ac:</div>
+          <div class="col-md-4" style="padding-left: 0px;"><input style="border:hidden; width: 50px;" id="TRACchd"
+              type="text"></div>
+        </div>
+        <div class="row" style="font-size: 12px; color: black;">
+          <div class="col-md-8" style="padding-left: 0px;">Total cost/ac:</div>
+          <div class="col-md-4" style="padding-left: 0px;"><input style="border:hidden; width: 50px;" id="TCACchd"
+              type="text"></div>
+        </div>
+        <div class="row" style="font-size: 12px; color: black;">
+          <div class="col-md-8" style="padding-left: 0px;">Net return/ac:</div>
+          <div class="col-md-4" style="padding-left: 0px;"><input style="border:hidden; width: 50px;" id="NPACchd"
+              type="text"></div>
+        </div>
+        <div class="row" style="font-size: 12px; color: black;">
+          <div class="col-md-8" style="padding-left: 0px;">Break even ratio:</div>
+          <div class="col-md-4" style="padding-left: 0px;"><input style="border:hidden; width: 50px;" id="BEchd"
+              type="text"></div>
+        </div>
+        <div class="row" style="font-size: 12px; color: black;">
+          <div class="col-md-8" style="padding-left: 0px;">Payback:</div>
+          <div class="col-md-4" style="padding-left: 0px;"><input style="border:hidden; width: 50px;" id="PBchd"
+              type="text"></div>
+        </div>
+        <div class="row" style="font-size: 12px; color: black;">
+          <div class="col-md-8" style="padding-left: 0px;">Return on investment (%):</div>
+          <div class="col-md-4" style="padding-left: 0px;"><input style="border:hidden; width: 50px;" id="ROIchd"
+              type="text"></div>
+        </div>
+      </div>
+      <div class="col-md-3">
+      </div>
+    </div>
+    <div class="row" style="padding-top: 20px;">
+      <div class="col-md-2"></div>
+      <div class="col-md" style="text-align: center;"> <input
+          style="background-color:#FFC72A ; color: black;  border-radius: 10px;" value="Go back" type="button"
+          onclick="goBackCalcSec()">
+      </div>
+      <div class="col-md" style="text-align: center; "> <input id="cmd"
+          style="background-color:#FFC72A ;color: black; border-radius: 10px;" value="Download Chart" type="button"
+          onclick="genCharts()">
+      </div>
+      <div class="col-md-2"></div>
+    </div>
+  </div>
+
+  <section class="content-section" id="contact" style="background-image: url(Images/NDSU_temp.jpg)">
+    <div class="container border mt-2 min-vh-50" style="background-color:#0A5640">
+      <div class="row mt-2" style="text-align: center">
+        <div class="col-md">
+          <h4 class="text-center" style="font-size: 1.5vh; font-weight:bold; color: #FFC72A">Designed, developed, and
+            maintained by: </h4>
+        </div>
+      </div>
+      <div class="row" style="text-align: center">
+        <div class="col-md">
+          <h4 style="font-size: 1.5vh; color:#FFC72A"><a href="https://subhashree.website" target="_blank"
+              style="color: #FFC72A">Subhashree N Srinivasagan</a> &amp; <a
+              href="https://www.ndsu.edu/aben/fs/faculty/cannayen/" target="_blank" style="color: #FFC72A">
+              Igathinathane Cannayen</a></h4>
+        </div>
+      </div>
+
+      <div class="row" style="text-align: center">
+        <div class="col-md">
+          <h4 style="font-size: 1.5vh; color:#FFC72A">Coauthors: <a
+              href="https://www.ars.usda.gov/plains-area/mandan-nd/ngprl/people/mark-liebig/"
+              style="color: #FFC72A">Mark Liebig</a>, <a
+              href="https://www.ars.usda.gov/plains-area/mandan-nd/ngprl/people/jonathan-halvorson/"
+              style="color: #FFC72A">Jonathan Halvorson</a>, <a
+              href="https://www.ars.usda.gov/plains-area/mandan-nd/ngprl/people/david-archer/"
+              style="color: #FFC72A">David Arche</a>r, <a
+              href="https://www.ars.usda.gov/plains-area/mandan-nd/ngprl/people/john-hendrickson/"
+              style="color: #FFC72A">John Hendrickson</a>, and <a
+              href="https://www.ars.usda.gov/plains-area/mandan-nd/ngprl/people/scott-kronberg/"
+              style="color: #FFC72A">Scott Kronberg</a>, <a href="https://www.ars.usda.gov/plains-area/mandan-nd/ngprl/"
+              style="color: #FFC72A">USDA-ARS Northern Great Plains Research Laboratory, Mandan, North Dakota</a></h4>
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class="col-md">
+          <h4 class="text-center" style="font-size: 1.5vh; font-weight: 200;color: #FFC72A"> For more information
+            contact: <a href="mailto:subhashree.navaneeth@ndsu.edu"
+              style="color: #FFC72A">subhashree.navaneeth@ndsu.edu</a> or <a
+              href="mailto:igathinathane.cannayen@ndsu.edu" style="color: #FFC72A">igathinathane.cannayen@ndsu.edu</a>
+          </h4>
+        </div>
+      </div>
+
+      <div class="row" style="text-align: center">
+        <div class="col-md">
+          <input type="button" value=" Disclaimer "
+            style="font-size: 1.5vh; background-color:#FFC72A; border: none; outline: none; color: red; border-radius: 3px"
+            onclick="discInfo()">
+        </div>
+
+      </div>
+      <div class="row" style="height: 9vh; text-align: center; background-color: burlywood">
+        <div class="col-md" style="height: 9vh">
+          <img src="Images/AgBioEng_color.png" alt="ABEN" style="align-content: center; height: 7vh">
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Plugin JavaScript -->
+  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for this template -->
+  <script src="js/stylish-portfolio.min.js"></script>
+
+</body>
+
+</html>

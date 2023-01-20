@@ -1,0 +1,405 @@
+html,
+  body {
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+  }
+
+  .nav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    opacity: 0.9;
+    overflow-x: hidden;
+    padding-top: 60px;
+    transition: 0.7s;
+  }
+
+  .nav a {
+    display: block;
+    padding: 20px 30px;
+    font-size: 25px;
+    text-decoration: none;
+    color: #ccc;
+  }
+
+  .nav a:hover {
+    color: #fff;
+    transition: 0.4s;
+
+  }
+
+  .nav .close {
+    position: absolute;
+    top: 0;
+    right: 22px;
+    margin-left: 50px;
+    font-size: 30px;
+  }
+
+  .slide a {
+    color: #000;
+    font-size: 36px;
+  }
+
+  #content {
+    padding: 20px;
+    transition: margin-left 0.7s;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .submenu {
+    height: 50%;
+  }
+
+  @media (max-width: 767px) {
+    .hidden-xs {
+      display: none !important;
+    }
+  }
+
+  .service-icon {
+    background-color: #fff;
+    color: #1D809F;
+    height: 7rem;
+    width: 7rem;
+    display: block;
+    line-height: 7.5rem;
+    font-size: 2.25rem;
+    box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.1);
+  }
+
+  .masthead {
+    color: #FFC82E;
+    background-image: url(Images/NDSU_temp.jpg);
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-position: center center;
+    background-size: cover;
+    min-height: 100vh;
+  }
+
+  #manualsec {
+    text-align: center;
+    color: #FFC82E;
+    background-image: url(Images/NDSU_temp.jpg);
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-position: center center;
+    background-size: cover;
+    min-height: 100vh;
+  }
+
+  .paddingsec {
+    padding-bottom: 0.5%;
+  }
+
+  .img-fluid {
+    opacity: 1.0;
+    filter: alpha(opacity=100);
+  }
+
+  .img-fluid:hover {
+    opacity: 0.5;
+    filter: alpha(opacity=40);
+  }
+
+  /* Container holding the image and the text */
+  .container {
+    position: relative;
+    text-align: center;
+    color: white;
+  }
+
+  /* Bottom left text */
+  .bottom-left {
+    position: absolute;
+    bottom: 8vh;
+    left: 14vw;
+  }
+
+  .bottom-left-two {
+    position: absolute;
+    bottom: 2vw;
+    left: 9vw;
+  }
+
+  .portfolio-item {
+    display: block;
+    position: relative;
+    overflow: hidden;
+    max-width: 530px;
+    margin: auto auto 1rem;
+  }
+
+  .portfolio-item .caption {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(33, 37, 41, 0.2);
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 1;
+  }
+
+  .portfolio-item .caption .caption-content {
+    color: #fff;
+    margin: auto 2rem 2rem;
+  }
+
+  .portfolio-item .caption .caption-content h2 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+  }
+
+  .portfolio-item .caption .caption-content p {
+    font-weight: 300;
+    font-size: 1.2rem;
+  }
+
+  @media (min-width: 992px) {
+    .portfolio-item {
+      max-width: none;
+      margin: 0;
+    }
+
+    .portfolio-item .caption {
+      -webkit-transition: -webkit-clip-path 0.25s ease-out, background-color 0.7s;
+      -webkit-clip-path: inset(0px);
+      clip-path: inset(0px);
+    }
+
+    .portfolio-item .caption .caption-content {
+      transition: opacity 0.25s;
+      margin-left: 5rem;
+      margin-right: 5rem;
+      margin-bottom: 5rem;
+    }
+
+    .portfolio-item img {
+      -webkit-transition: -webkit-clip-path 0.25s ease-out;
+      -webkit-clip-path: inset(-1px);
+      clip-path: inset(-1px);
+    }
+
+    .portfolio-item:hover img {
+      -webkit-clip-path: inset(2rem);
+      clip-path: inset(2rem);
+    }
+
+    .portfolio-item:hover .caption {
+      height: 70%;
+      width: 83%;
+      background-color: rgba(29, 128, 159, 0.9);
+      -webkit-clip-path: inset(2rem);
+      clip-path: inset(2rem);
+    }
+  }
+
+  .masthead .masthead-subheading {
+    font-size: 1.5rem;
+    font-style: italic;
+    line-height: 1rem;
+    margin-bottom: 25px;
+    font-family: "Droid Serif", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    color: #FFC82E;
+  }
+
+  .masthead .masthead-heading {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 2rem;
+    margin-bottom: 2rem;
+    font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  }
+
+  .row-fluid [class*="span"] {
+    margin-left: 0;
+  }
+
+  .big-banner {
+    /* The image used */
+    background-image: url(Images/NDSU_temp.jpg);
+
+    /* Full height */
+    height: 100vh;
+
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: transparent;
+  }
+
+  .slidecontainer {
+    height: 25px;
+    /* Width of the outside container */
+  }
+
+  .slider:hover {
+    opacity: 1;
+  }
+
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    position: relative;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #0A5640;
+    cursor: pointer;
+  }
+
+
+  .slider {
+    -webkit-appearance: none;
+    height: 5px;
+    border-radius: 5px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+  }
+
+  .slides {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media all and (max-width: 768px) {
+    #sliderset {
+      padding-left: 120px;
+    }
+  }
+
+  @media all and (max-width: 768px) {
+    #HayMount {
+      max-height: 100%;
+      max-width: 100%;
+    }
+  }
+
+  @media all and (max-width: 768px) {
+    #myChart1 {
+      max-width: 100%;
+      max-height: 40%;
+    }
+  }
+
+  .header {
+    height: 10vh;
+  }
+
+  @media all and (max-width: 700px) {
+    .header {
+      height: 20vh;
+      font-size: 10px;
+    }
+  }
+
+  #container {
+    max-width: 90vw;
+
+    @media screen and (min-aspect-ratio: 13/9) {}
+
+    @media screen and (max-aspect-ratio: 13/9) {}
+
+  }
+
+  .box {
+    padding: 0 5px 0 5px;
+  }
+
+  div.tooltip-inner {
+    text-align: left;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 5px;
+    margin-bottom: 6px;
+    background-color: #0A5640;
+    color: white;
+    font-size: 14px;
+    max-width: 400px;
+    /*    opacity: 1;*/
+  }
+
+  div.tooltip.show {
+    opacity: 0.95;
+  }
+
+
+  .padding-0 {
+    padding-bottom: 0;
+  }
+
+  .bullelements {
+    font-size: 2vh;
+  }
+
+  .containerflex {
+    display: flex;
+    height: 240px;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .btn:focus {
+    outline: none;
+  }
+
+  .rowht{
+    height: 48px;
+  }
+
+   /* toggle in label designing */
+   .toggle {
+    position : relative ;
+    display : inline-block;
+    width : 50px;
+    height : 25px;
+    background-color: red;
+    border-radius: 30px;
+    border: 2px solid gray;
+}
+        
+/* After slide changes */
+.toggle:after {
+    content: '';
+    position: absolute;
+    width: 23px;
+    height: 23px;
+    border-radius: 50%;
+    background-color: gray;
+    /* top: 0.5px;  */
+    left: 1px;
+    transition:  all 0.5s;
+}
+        
+/* Toggle text */
+p {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+}
+        
+/* Checkbox checked effect */
+.checkbox:checked + .toggle::after {
+    left : 25px; 
+}
+        
+/* Checkbox checked toggle label bg color */
+.checkbox:checked + .toggle {
+    background-color: green;
+}
+        
+/* Checkbox vanished */
+.checkbox { 
+    display : none;
+}
